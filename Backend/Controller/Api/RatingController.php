@@ -1,7 +1,7 @@
 <?php
-class UserController extends BaseController
+class RatingController extends BaseController
 {
-
+    // to be populated with rating-related info
     public function createAction()
     {
         // Get the request method (GET, POST, DELETE, etc.)

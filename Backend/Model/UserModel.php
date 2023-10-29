@@ -1,9 +1,22 @@
 <?php
+/**
+ * UserModel class handles user-related database operations
+ * 
+ */
+
 require_once PROJECT_ROOT_PATH . "/Model/Database.php";
+
 class UserModel extends Database
 {
-    public function getUsers($limit)
+    // Creates a new user in the database
+    public function createUser($userData) 
     {
-        return $this->select("SELECT * FROM users ORDER BY user_id ASC LIMIT ?", ["i", $limit]);
+        $hashed_password = password_hash($userData[1], PASSWORD_DEFAULT);
+        return $this->cud("INSERT INTO users (username, password) VALUES (?, ?)", ["ss", $userData[0], $hashed_password]);
+    }
+
+    public function getUserPassword($username)
+    {
+        return $this->read("SELECT password FROM users WHERE username = ?", ["s", $username]);
     }
 }
