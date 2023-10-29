@@ -32,4 +32,19 @@ class RatingController extends BaseController
             $userModel->deleteRating($id);
         }
     }
+
+    public function deleteAction()
+    {
+        // Get the request method (GET, POST, DELETE, etc.)
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+
+        // Check if request method is POST
+        if (strtoupper($requestMethod) == 'POST') {
+
+            $id = $_POST['id'];
+            // instatiate a RatingModel to delete the rating
+            $userModel = new RatingModel();
+            $userModel->deleteRating($id);
+        }
+    }
 }
