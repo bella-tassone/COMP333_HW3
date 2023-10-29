@@ -8,9 +8,9 @@ require_once PROJECT_ROOT_PATH . "/Model/Database.php";
 
 class RatingModel extends Database
 {
-    public function getRating($params)
+    public function getRating($input)
     {
-        return $this->read("SELECT * FROM ratings WHERE username = ? AND song = ? AND artist = ?", ["sss", $params[0], $params[1], $params[2]]);
+        return $this->read("SELECT * FROM ratings WHERE username = ? AND song = ? AND artist = ?", ["sss", $input[0], $input[1], $input[2]]);
     }
 
     public function getRatingFromID($id) 
@@ -18,9 +18,9 @@ class RatingModel extends Database
         return $this->read("SELECT * FROM ratings WHERE id = ?", ["i", $id]);
     }
 
-    public function createRating($params) 
+    public function createRating($input) 
     {
-        return $this->cud("INSERT INTO ratings (username, song, artist, rating) VALUES (?, ?, ?, ?)", ["sssi", $params[0], $params[1], $params[2], $params[3]]);
+        return $this->cud("INSERT INTO ratings (username, song, artist, rating) VALUES (?, ?, ?, ?)", ["sssi", $input[0], $input[1], $input[2], $input[3]]);
     }
 
     public function deleteRating($id)
@@ -28,8 +28,8 @@ class RatingModel extends Database
         return $this->cud("DELETE FROM ratings WHERE id = ?", ["i", $id]);
     }
 
-    public function updateRating($params)
+    public function updateRating($input)
     {
-        return $this->cud("UPDATE ratings SET song = ?, artist = ?, rating =? WHERE id = ?", ["ssii", $params[0], $params[1], $params[2], $params[3]]);
+        return $this->cud("UPDATE ratings SET song = ?, artist = ?, rating =? WHERE id = ?", ["ssii", $input[0], $input[1], $input[2], $input[3]]);
     }
 }
