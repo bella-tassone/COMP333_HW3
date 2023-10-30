@@ -13,7 +13,7 @@ header('Access-Control-Allow-Credentials:true');
 
 $uri = explode( '/', $uri );
 
-if ((isset($uri[2]) && $uri[2] != ('user'||'rating')) || !isset($uri[3])) {
+if ((isset($uri[2]) && (($uri[2] != 'user') && ($uri[2] != 'rating'))) || !isset($uri[3])) {
     header("HTTP/1.1 404 Not Found");
     exit();
 }

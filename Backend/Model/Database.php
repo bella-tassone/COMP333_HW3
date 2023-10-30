@@ -31,7 +31,7 @@ class Database
     {
         try {
             $stmt = $this->executeStatement( $query , $params );
-            $result = $stmt->get_result()->fetch_assoc(MYSQLI_ASSOC);				
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);				
             $stmt->close();
             return $result;
         } catch(Exception $e) {
@@ -52,10 +52,10 @@ class Database
             }
             if( $params ) {
                 $length = count($params);
-                if ($length == 2) {$stmt->bind_param($params[0], $params[1]);}
-                elseif ($length == 3) {$stmt->bind_param($params[0], $params[1], $params[2]);}
-                elseif ($length == 4) {$stmt->bind_param($params[0], $params[1], $params[2], $params[3]);}
-                elseif ($length == 5) {$stmt->bind_param($params[0], $params[1], $params[2], $params[3], $params[4]);}
+                if ($length === 2) {$stmt->bind_param($params[0], $params[1]);}
+                elseif ($length === 3) {$stmt->bind_param($params[0], $params[1], $params[2]);}
+                elseif ($length === 4) {$stmt->bind_param($params[0], $params[1], $params[2], $params[3]);}
+                elseif ($length === 5) {$stmt->bind_param($params[0], $params[1], $params[2], $params[3], $params[4]);}
 
             }
             $stmt->execute();

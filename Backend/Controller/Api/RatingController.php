@@ -48,7 +48,7 @@ class RatingController extends BaseController
 
             // retrieve user registration data from request body
             $postData = json_decode(file_get_contents('php://input'), true);
-            $username = //session info
+            $username = null; //session info
             $song = $postData[1];
             $artist = $postData[2];
             // instatiate a RatingModel to create the rating
@@ -77,7 +77,7 @@ class RatingController extends BaseController
 
             $row = $ratingModel->getRatingFromID($id);
             $username = $row['username'];
-            $user = //session variable
+            $user = null; //session variable
 
             if ($username == $user) {
                 $userModel->deleteRating($id);
@@ -102,7 +102,7 @@ class RatingController extends BaseController
 
             $row = $ratingModel->getRatingFromID($id);
             $username = $row['username'];
-            $user = //session variable
+            $user = null; //session variable
 
             if ($username == $user) {
                 $userModel->updateRating($id);
