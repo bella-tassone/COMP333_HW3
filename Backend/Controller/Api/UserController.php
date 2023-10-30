@@ -1,10 +1,7 @@
 <?php
 class UserController extends BaseController
 {
-    /** 
-* "/user/list" Endpoint - Get list of users 
-*/
-    public function listAction()
+    public function getAction()
     {
         $strErrorDesc = '';
         $requestMethod = $_SERVER["REQUEST_METHOD"];
@@ -16,8 +13,8 @@ class UserController extends BaseController
                 if (isset($arrQueryStringParams['limit']) && $arrQueryStringParams['limit']) {
                     $intLimit = $arrQueryStringParams['limit'];
                 }
-                $arrUsers = $userModel->getUsers($intLimit);
-                $responseData = json_encode($arrUsers);
+                $arrUser = $userModel->getUserList($intLimit);
+                $responseData = json_encode($arrUser);
             } catch (Error $e) {
                 $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
                 $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
@@ -38,4 +35,22 @@ class UserController extends BaseController
             );
         }
     }
+
+
+    public function createAction()
+    {
+        // Get the request method (GET, POST, DELETE, etc.)
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
+
+        // Check if request method is POST
+        if (strtoupper($requestMethod) == 'POST') {
+
+            // retrieve user registration data from request body
+            $postData = json_decode(file_get_contents('php://input'), true);
+            // instatiate a UserModel to create the user
+            $userModel = new UserModel();
+            $userModel->createUser($postData);
+        }
+    }
 }
+?>
