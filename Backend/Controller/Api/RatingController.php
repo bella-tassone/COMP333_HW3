@@ -78,6 +78,7 @@ class RatingController extends BaseController
                 }
 
                 $rows = $ratingModel->getRatingFromID($id);
+                //should only be one row since ids are unique
                 $row = $rows[0];
                 $username = $row['username'];
                 $user = null; //session variable
@@ -119,26 +120,65 @@ class RatingController extends BaseController
 
     public function updateAction()
     {
+        $strErrorDesc = '';
         // Get the request method (GET, POST, DELETE, etc.)
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         $arrQueryStringParams = $this->getQueryStringParams();
 
-        // Check if request method is POST
+        // Check if request method is DELETE
         if (strtoupper($requestMethod) == 'PUT') {
-            $ratingModel = new RatingModel();
+            try {
+                $ratingModel = new RatingModel();
 
-            $id = null;
-            if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
-                $id = $arrQueryStringParams['id'];
+                $id = null;
+                if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
+                    $id = $arrQueryStringParams['id'];
+                }
+
+                $rows = $ratingModel->getRatingFromID($id);
+                //should only be one row since ids are unique
+                $row = $rows[0];
+                $username = $row['username'];
+                $song = $row['song'];
+                $artist = $row['artist'];
+                $user = null; //session variable
+                $arrRating = [];
+
+                $postData = json_decode(file_get_contents('php://input'), true);
+                $updatedRating = $postData[0]['rating'];
+
+                //conditional currently always returns true, to be compared against session info eventually
+                if ($username == $username) {
+                    $arrRating['code'] = $ratingModel->updateRating([$song, $artist, $updatedRating, $id]);
+                    if ($arrRating['code']) {
+                        $arrRating['message'] = 'Rating updated successfully';
+                    } else {$arrRating['message'] = 'Rating update unsuccessful';}
+                }
+                else {
+                    $arrRating['message'] = "Not user's rating, update aborted";
+                }
+
+                $arrRating['info'] = $postData;
+                $responseData = json_encode($arrRating);
+
+            } catch (Error $e) {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
             }
-
-            $row = $ratingModel->getRatingFromID($id);
-            $username = $row['username'];
-            $user = null; //session variable
-
-            if ($username == $user) {
-                $userModel->updateRating($id);
-            }
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+        // send output 
+        if (!$strErrorDesc) {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
+                array('Content-Type: application/json', $strErrorHeader)
+            );
         }
     }
 }
