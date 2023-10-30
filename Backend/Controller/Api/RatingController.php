@@ -37,6 +37,8 @@ class RatingController extends BaseController
             );
         }
     }
+
+    
     
     public function createAction()
     {
@@ -51,7 +53,7 @@ class RatingController extends BaseController
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     }
 
-                else{
+                else {
                     $username = $postData["username"];
                     $artist = $postData["artist"];
                     $song = $postData["song"];
@@ -63,10 +65,10 @@ class RatingController extends BaseController
                     }
 
                 else{
-                    $userModel = new UserModel();
-                    $userExist = $userModel->checkUserExists($username);
+                    $UserModel = new UserModel();
+                    $userExist = $UserModel->checkUserExists($username);
 
-                    if (!$existsResult) {
+                    if (!$userExist) {
                         $strErrorDesc = "User not in database";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request'; 
                     }
@@ -78,11 +80,49 @@ class RatingController extends BaseController
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         }
 
-                        
+                        else {
 
-            }
+                            if (!($RatingModel->checkUserCanRate($username, $artist, $song))) {
+                                $strErrorDesc = "User already rated this song";
+                                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        }
+                            else {
+                                $RatingModel->addRating($username, $artist, $song, $rating);
+                            }
+
+                            $array = [
+                                "new rating added" => $ratingAdded
+                            ];
+                            $responseData = json_encode($array);
+                            }
+                        }
+                    }
+                }
+            } 
         }
-    }
+        catch (Error $e) {
+            $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+            $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+        // send output 
+        if (!$strErrorDesc) {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        }
+
+
+
+
 
     public function deleteAction()
     {

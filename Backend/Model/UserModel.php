@@ -36,12 +36,5 @@ class UserModel extends Database
         return count($result) != 0;
     }
 
-    public function checkUserCanRate($username)
-    {
-        // True if not rated
-        $result = $this->select("SELECT username, artist, song FROM ratings WHERE username = ? AND artist = ? AND song = ?", ["sss", $username, $artist, $song]);
-        return (count($result) == 0);
-    }
-
 }
 ?>

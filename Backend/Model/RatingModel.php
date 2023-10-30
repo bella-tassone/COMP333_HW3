@@ -37,5 +37,13 @@ class RatingModel extends Database
     {
         return $this->cud("UPDATE ratings SET song = ?, artist = ?, rating =? WHERE id = ?", ["ssii", $input[0], $input[1], $input[2], $input[3]]);
     }
+
+    public function checkUserCanRate($username)
+    {
+        // True if not rated
+        $result = $this->select("SELECT username, artist, song FROM ratings WHERE username = ? AND artist = ? AND song = ?", ["sss", $username, $artist, $song]);
+        return (count($result) == 0);
+    }
+    
 }
 ?>
