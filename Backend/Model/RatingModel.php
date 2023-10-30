@@ -10,7 +10,7 @@ class RatingModel extends Database
 {
     public function getRatingList($limit)
     {
-        return $this->select("SELECT * FROM users LIMIT ?", ["i", $limit]);
+        return $this->read("SELECT * FROM ratings LIMIT ?", ["i", $limit]);
     }
 
     public function getRating($input)
@@ -38,3 +38,4 @@ class RatingModel extends Database
         return $this->cud("UPDATE ratings SET song = ?, artist = ?, rating =? WHERE id = ?", ["ssii", $input[0], $input[1], $input[2], $input[3]]);
     }
 }
+?>

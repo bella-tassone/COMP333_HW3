@@ -10,8 +10,8 @@ class RatingController extends BaseController
         $arrQueryStringParams = $this->getQueryStringParams();
         if (strtoupper($requestMethod) == 'GET') {
             try {
-                $userModel = new RatingModel();
-                $intLimit = 2;
+                $ratingModel = new RatingModel();
+                $intLimit = 10;
                 if (isset($arrQueryStringParams['limit']) && $arrQueryStringParams['limit']) {
                     $intLimit = $arrQueryStringParams['limit'];
                 }
@@ -51,7 +51,7 @@ class RatingController extends BaseController
             $username = //session info
             $song = $postData[1];
             $artist = $postData[2];
-            // instatiate a RatingModel to create the RATING
+            // instatiate a RatingModel to create the rating
             $userModel = new RatingModel();
             $row = $userModel->getRating([$username, $song, $artist]);
             if (is_null($row)) {
@@ -67,7 +67,7 @@ class RatingController extends BaseController
         $arrQueryStringParams = $this->getQueryStringParams();
 
         // Check if request method is POST
-        if (strtoupper($requestMethod) == 'POST') {
+        if (strtoupper($requestMethod) == 'DELETE') {
             $ratingModel = new RatingModel();
 
             $id = null;
@@ -92,7 +92,7 @@ class RatingController extends BaseController
         $arrQueryStringParams = $this->getQueryStringParams();
 
         // Check if request method is POST
-        if (strtoupper($requestMethod) == 'POST') {
+        if (strtoupper($requestMethod) == 'PUT') {
             $ratingModel = new RatingModel();
 
             $id = null;
@@ -110,3 +110,4 @@ class RatingController extends BaseController
         }
     }
 }
+?>

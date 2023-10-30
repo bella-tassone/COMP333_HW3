@@ -20,3 +20,4 @@ class UserModel extends Database
         return $this->read("SELECT password FROM users WHERE username = ?", ["s", $username]);
     }
 }
+?>
