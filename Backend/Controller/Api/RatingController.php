@@ -62,26 +62,58 @@ class RatingController extends BaseController
 
     public function deleteAction()
     {
+        $strErrorDesc = '';
         // Get the request method (GET, POST, DELETE, etc.)
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         $arrQueryStringParams = $this->getQueryStringParams();
 
-        // Check if request method is POST
+        // Check if request method is DELETE
         if (strtoupper($requestMethod) == 'DELETE') {
-            $ratingModel = new RatingModel();
+            try {
+                $ratingModel = new RatingModel();
 
-            $id = null;
-            if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
-                $id = $arrQueryStringParams['id'];
+                $id = null;
+                if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
+                    $id = $arrQueryStringParams['id'];
+                }
+
+                $rows = $ratingModel->getRatingFromID($id);
+                $row = $rows[0];
+                $username = $row['username'];
+                $user = null; //session variable
+                $arrRating = [];
+
+                //conditional currently always returns true, to be compared against session info eventually
+                if ($username == $username) {
+                    $arrRating['code'] = $ratingModel->deleteRating($id);
+                    if ($arrRating['code']) {
+                        $arrRating['message'] = 'Rating deleted successfully';
+                    } else {$arrRating['message'] = 'Rating deletion unsuccessful';}
+                }
+                else {
+                    $arrRating['message'] = "Not user's rating, deletion aborted";
+                }
+
+                $responseData = json_encode($arrRating);
+
+            } catch (Error $e) {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
             }
-
-            $row = $ratingModel->getRatingFromID($id);
-            $username = $row['username'];
-            $user = null; //session variable
-
-            if ($username == $user) {
-                $userModel->deleteRating($id);
-            }
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+        // send output 
+        if (!$strErrorDesc) {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
+                array('Content-Type: application/json', $strErrorHeader)
+            );
         }
     }
 

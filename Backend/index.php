@@ -8,7 +8,7 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 //CORS headers
 header('Access-Control-Allow-Origin:*');
 header('Access-Control-Allow-Headers:*');
-header('Access-Control-Allow-Methods:POST,GET,OPTIONS,DELETE');
+header('Access-Control-Allow-Methods:POST,GET,DELETE,PUT,OPTIONS');
 header('Access-Control-Allow-Credentials:true');
 
 $uri = explode( '/', $uri );
