@@ -48,7 +48,7 @@ class RatingModel extends Database
     public function checkUserExists($username)
     {
         $result = $this->read("SELECT * FROM users WHERE username = ?", ["s", $username]);
-        return count($result) != 0;
+        return (count($result) != 0);
     }
 }
 ?>
