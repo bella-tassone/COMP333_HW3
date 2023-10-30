@@ -46,6 +46,7 @@ class RatingController extends BaseController
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         if (strtoupper($requestMethod) == 'POST') {
             try {
+                $RatingModel = new RatingModel();
                 $postData = json_decode(file_get_contents('php://input'), true);
 
                 if (!(array_key_exists('username', $postData) && array_key_exists('artist', $postData) && array_key_exists('song', $postData) && array_key_exists('rating', $postData))) {
@@ -58,13 +59,17 @@ class RatingController extends BaseController
                     $artist = $postData["artist"];
                     $song = $postData["song"];
                     $rating = $postData["rating"];
+                    $userExist = $RatingModel->checkUserExists($username);
 
-                    if (!$userExist) {
-
+                    if (($username == "") || ($artist == "") || ($song == "") || ($rating == "")) {
+                        $strErrorDesc = "Not all fields filled out";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    }
+                    elseif (!$userExist) {
                         $strErrorDesc = "User not in the database";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-
-                    } elseif ($rating > 5 || $rating < 0) {
+                    } 
+                    elseif ($rating > 5 || $rating < 0) {
 
                         $strErrorDesc = "Rating must be between 0 and 5";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
@@ -75,8 +80,9 @@ class RatingController extends BaseController
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
 
                     } else {
-                        $RatingModel->addRating($username, $artist, $song, $rating);
+                        $RatingModel->createRating($username, $artist, $song, $rating);
                         $responseData = json_encode(["message" => "Rating added successfully"]);
+                        echo $responseData;
                     }
                 }
             } catch (Error $e) {
@@ -98,59 +104,6 @@ class RatingController extends BaseController
             $this->sendOutput(json_encode(['error' => $strErrorDesc]), 
                 array('Content-Type: application/json', $strErrorHeader)
             );
-        }
-    }
-
-
-
-
-    public function deleteAction()
-    {
-        // Get the request method (GET, POST, DELETE, etc.)
-        $requestMethod = $_SERVER["REQUEST_METHOD"];
-        $arrQueryStringParams = $this->getQueryStringParams();
-
-        // Check if request method is POST
-        if (strtoupper($requestMethod) == 'DELETE') {
-            $ratingModel = new RatingModel();
-
-            $id = null;
-            if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
-                $id = $arrQueryStringParams['id'];
-            }
-
-            $row = $ratingModel->getRatingFromID($id);
-            $username = $row['username'];
-            $user = null; //session variable
-
-            if ($username == $user) {
-                $userModel->deleteRating($id);
-            }
-        }
-    }
-
-    public function updateAction()
-    {
-        // Get the request method (GET, POST, DELETE, etc.)
-        $requestMethod = $_SERVER["REQUEST_METHOD"];
-        $arrQueryStringParams = $this->getQueryStringParams();
-
-        // Check if request method is POST
-        if (strtoupper($requestMethod) == 'PUT') {
-            $ratingModel = new RatingModel();
-
-            $id = null;
-            if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
-                $id = $arrQueryStringParams['id'];
-            }
-
-            $row = $ratingModel->getRatingFromID($id);
-            $username = $row['username'];
-            $user = null; //session variable
-
-            if ($username == $user) {
-                $userModel->updateRating($id);
-            }
         }
     }
 }

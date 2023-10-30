@@ -29,12 +29,5 @@ class UserModel extends Database
     {
         return $this->cud("DELETE FROM users WHERE id = ?", ["i", $id]);
     }
-
-    public function checkUserExists($username)
-    {
-        $result = $this->select("SELECT * FROM users WHERE username = ?", ["s", $username]);
-        return count($result) != 0;
-    }
-
 }
 ?>
