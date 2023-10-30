@@ -62,8 +62,8 @@ class UserController extends BaseController
                 $arrUser = [];
 
                 $postData = json_decode(file_get_contents('php://input'), true);
-                $username = $postData[0]['username'];
-                $password = $postData[0]['password'];
+                $username = $postData['username'];
+                $password = $postData['password'];
 
                 $rows = $userModel->getUserPassword($username);
                 //if username doesn't match, row will be null
@@ -78,10 +78,17 @@ class UserController extends BaseController
                         $_SESSION["loggedin"] = true;
                         $_SESSION["username"] = $user;
                         $arrUser['message'] = 'login successful!';
+                        $responseData = json_encode($arrUser);
+                    }
+                    else {
+                        $strErrorDesc = "Username or password is incorrect.";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     }
                 }
-
-                $responseData = json_encode($arrUser);
+                else {
+                    $strErrorDesc = "Username or password is incorrect.";
+                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                }
             } catch (Error $e) {
                 $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
                 $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
