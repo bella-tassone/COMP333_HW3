@@ -19,5 +19,10 @@ class UserModel extends Database
     {
         return $this->read("SELECT password FROM users WHERE username = ?", ["s", $username]);
     }
+
+    public function getUserList($limit)
+    {
+        return $this->read("SELECT * FROM users LIMIT ?", ["i", $limit]);
+    }
 }
 ?>

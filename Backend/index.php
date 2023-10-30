@@ -29,4 +29,10 @@ elseif (isset($uri[2]) && ($uri[2]=='rating')) {
     $strMethodName = $uri[3] . 'Action';
     $objFeedController->{$strMethodName}();
 }
+elseif (isset($uri[2]) && ($uri[2]=='users')) {
+    require PROJECT_ROOT_PATH . "/Controller/Api/UserController.php";
+    $objFeedController = new UserController();
+    $strMethodName = $uri[3] . 'Action';
+    $objFeedController->{$strMethodName}();
+}
 ?>
