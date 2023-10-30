@@ -23,9 +23,10 @@ class RatingModel extends Database
         return $this->read("SELECT * FROM ratings WHERE id = ?", ["i", $id]);
     }
 
-    public function createRating($input) 
+    public function createRating($username, $artist, $song, $rating)
     {
-        return $this->cud("INSERT INTO ratings (username, song, artist, rating) VALUES (?, ?, ?, ?)", ["sssi", $input[0], $input[1], $input[2], $input[3]]);
+        return $this->cud("INSERT INTO ratings (username, artist, song, rating) VALUES (?, ?, ?, ?)", ["sssi", $username, $artist, $song, $rating]);
+
     }
 
     public function deleteRating($id)
@@ -36,6 +37,18 @@ class RatingModel extends Database
     public function updateRating($input)
     {
         return $this->cud("UPDATE ratings SET song = ?, artist = ?, rating =? WHERE id = ?", ["ssii", $input[0], $input[1], $input[2], $input[3]]);
+    }
+
+    public function checkUserCanRate($username, $artist, $song)
+    {
+        $result = $this->read("SELECT username, artist, song FROM ratings WHERE username = ? AND artist = ? AND song = ?", ["sss", $username, $artist, $song]);
+        return (count($result) == 0);
+    }
+
+    public function checkUserExists($username)
+    {
+        $result = $this->read("SELECT * FROM users WHERE username = ?", ["s", $username]);
+        return count($result) != 0;
     }
 }
 ?>
