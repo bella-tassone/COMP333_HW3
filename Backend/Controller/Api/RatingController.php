@@ -82,7 +82,6 @@ class RatingController extends BaseController
                     } else {
                         $RatingModel->createRating($username, $artist, $song, $rating);
                         $responseData = json_encode(["message" => "Rating added successfully"]);
-                        echo $responseData;
                     }
                 }
             } catch (Error $e) {
