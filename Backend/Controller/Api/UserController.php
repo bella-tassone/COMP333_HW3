@@ -38,59 +38,59 @@ class UserController extends BaseController
 
     public function createAction()
     {
-    $strErrorDesc = '';
-    $requestMethod = $_SERVER["REQUEST_METHOD"];
+        $strErrorDesc = '';
+        $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-    if (strtoupper($requestMethod) == 'POST') {
-        try {
-            $userModel = new UserModel();
-            $postData = json_decode(file_get_contents('php://input'), true);
+        if (strtoupper($requestMethod) == 'POST') {
+            try {
+                $userModel = new UserModel();
+                $postData = json_decode(file_get_contents('php://input'), true);
 
-            if (!(array_key_exists('username', $postData) && array_key_exists('password', $postData))) {
-                $strErrorDesc = "Error: empty data";
-                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                } 
-            
-            else {
-                $username = $postData["username"];
-                $password = $postData["password"];
-
-                if ($username == "" || $password == "") {
+                if (!(array_key_exists('username', $postData) && array_key_exists('password', $postData))) {
                     $strErrorDesc = "Error: empty data";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                } elseif (strlen($password) < 10) {
-                    $strErrorDesc = "Password is less than 10 characters";
-                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                } elseif ($userModel->checkUserExists($username)) {
-                    $strErrorDesc = "Username already exists";
-                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                }
-                else{
-                    $userModel->createUser($username, $password);
-                    $userCreated = true;
-                }
-            }
-        } catch (Error $e) {
-            $strErrorDesc = $e->getMessage() . ' Something went wrong! Please contact support.';
-            $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
-        }
-    } else {
-        $strErrorDesc = 'Method not supported';
-        $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
-    }
+                    } 
+                
+                else {
+                    $username = $postData["username"];
+                    $password = $postData["password"];
 
-    if (!$strErrorDesc) {
-        $responseData = json_encode(["message" => "Data successfully processed"]);
-        $this->sendOutput(
-            $responseData,
-            array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-        );
-    } else {
-        $this->sendOutput(json_encode(['error' => $strErrorDesc]), 
-            array('Content-Type: application/json', $strErrorHeader)
-        );
-    }
-}   
+                    if ($username == "" || $password == "") {
+                        $strErrorDesc = "Error: empty data";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    } elseif (strlen($password) < 10) {
+                        $strErrorDesc = "Password is less than 10 characters";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    } elseif ($userModel->checkUserExists($username)) {
+                        $strErrorDesc = "Username already exists";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    }
+                    else{
+                        $userModel->createUser($username, $password);
+                        $userCreated = true;
+                    }
+                }
+            } catch (Error $e) {
+                $strErrorDesc = $e->getMessage() . ' Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+
+        if (!$strErrorDesc) {
+            $responseData = json_encode(["message" => "Data successfully processed"]);
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(['error' => $strErrorDesc]), 
+                array('Content-Type: application/json', $strErrorHeader)
+            );
+        }
+    }   
     
 
     public function loginAction()
