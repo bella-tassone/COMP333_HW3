@@ -59,67 +59,47 @@ class RatingController extends BaseController
                     $song = $postData["song"];
                     $rating = $postData["rating"];
 
-                    if (($username == "") || ($artist == "") || ($song == "") || ($rating == "")) {
-                        $strErrorDesc = "Not all fields have value";
-                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                    }
-
-                else{
-                    $UserModel = new UserModel();
-                    $userExist = $UserModel->checkUserExists($username);
-
                     if (!$userExist) {
-                        $strErrorDesc = "User not in database";
-                        $strErrorHeader = 'HTTP/1.1 400 Bad Request'; 
-                    }
 
-                    else{
+                        $strErrorDesc = "User not in the database";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
 
-                        if ($rating > 5 || $rating < 0) {
-                            $strErrorDesc = "Rating must be between 1 and 5";
-                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                        }
+                    } elseif ($rating > 5 || $rating < 0) {
 
-                        else {
+                        $strErrorDesc = "Rating must be between 0 and 5";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
 
-                            if (!($RatingModel->checkUserCanRate($username, $artist, $song))) {
-                                $strErrorDesc = "User already rated this song";
-                                $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                        }
-                            else {
-                                $RatingModel->addRating($username, $artist, $song, $rating);
-                            }
+                    } elseif (!$RatingModel->checkUserCanRate($username, $artist, $song)) {
 
-                            $array = [
-                                "new rating added" => $ratingAdded
-                            ];
-                            $responseData = json_encode($array);
-                            }
-                        }
+                        $strErrorDesc = "User already rated this song";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+
+                    } else {
+                        $RatingModel->addRating($username, $artist, $song, $rating);
+                        $responseData = json_encode(["message" => "Rating added successfully"]);
                     }
                 }
-            } 
-        }
-        catch (Error $e) {
-            $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
-            $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            } catch (Error $e) {
+                $strErrorDesc = $e->getMessage() . ' Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
             }
         } else {
             $strErrorDesc = 'Method not supported';
             $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
         }
-        // send output 
+    
         if (!$strErrorDesc) {
             $this->sendOutput(
                 $responseData,
-                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+                array('Content-Type: application/json', 'HTTP/1.1 201 Created')
             );
+            
         } else {
-            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
+            $this->sendOutput(json_encode(['error' => $strErrorDesc]), 
                 array('Content-Type: application/json', $strErrorHeader)
             );
         }
-
+    }
 
 
 
