@@ -37,44 +37,56 @@ class RatingController extends BaseController
             );
         }
     }
+
+    
     
     public function createAction()
     {
         $strErrorDesc = '';
         // Get the request method (GET, POST, DELETE, etc.)
         $requestMethod = $_SERVER["REQUEST_METHOD"];
-
-        // Check if request method is POST
         if (strtoupper($requestMethod) == 'POST') {
             try {
-                $ratingModel = new RatingModel();
-
-                // retrieve user registration data from request body
+                $RatingModel = new RatingModel();
                 $postData = json_decode(file_get_contents('php://input'), true);
-                $song = $postData[0]['song'];
-                $artist = $postData[0]['artist'];
-                $rating = $postData[0]['rating'];
-                $user = $postData[0]['username']; //to be replaced with session variable
 
-                $rows = $ratingModel->getRating([$user, $song, $artist]);
-                //if no rows, $row will be null
-                $row = $rows[0];
+                if (!(array_key_exists('username', $postData) && array_key_exists('artist', $postData) && array_key_exists('song', $postData) && array_key_exists('rating', $postData))) {
+                    $strErrorDesc = "Not all data entered";
+                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    }
 
-                if (is_null($row)) {
-                    $arrRating['code'] = $ratingModel->createRating([$user, $song, $artist, $rating]);
-                    if ($arrRating['code']) {
-                        $arrRating['message'] = 'Rating created successfully';
-                    } else {$arrRating['message'] = 'Rating creation unsuccessful';}
-                }
                 else {
-                    $arrRating['message'] = "User has already rated this song!";
+                    $username = $postData["username"];
+                    $artist = $postData["artist"];
+                    $song = $postData["song"];
+                    $rating = $postData["rating"];
+                    $userExist = $RatingModel->checkUserExists($username);
+
+                    if (($username == "") || ($artist == "") || ($song == "") || ($rating == "")) {
+                        $strErrorDesc = "Not all fields filled out";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    }
+                    elseif (!$userExist) {
+                        $strErrorDesc = "User not in the database";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    } 
+                    elseif ($rating > 5 || $rating < 0) {
+
+                        $strErrorDesc = "Rating must be between 0 and 5";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+
+                    } elseif (!$RatingModel->checkUserCanRate($username, $artist, $song)) {
+
+                        $strErrorDesc = "User already rated this song";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+
+                    } else {
+                        $RatingModel->createRating($username, $artist, $song, $rating);
+                        $responseData = json_encode(["message" => "Rating added successfully"]);
+                    }
                 }
-
-                $arrRating['info'] = $row;
-                $responseData = json_encode($arrRating);
-
             } catch (Error $e) {
-                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorDesc = $e->getMessage() . ' Something went wrong! Please contact support.';
                 $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
             }
         } else {

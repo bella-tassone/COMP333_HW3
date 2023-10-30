@@ -36,7 +36,6 @@ class UserController extends BaseController
         }
     }
 
-
     public function createAction()
     {
         // Get the request method (GET, POST, DELETE, etc.)

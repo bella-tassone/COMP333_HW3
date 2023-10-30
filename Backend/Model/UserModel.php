@@ -24,5 +24,10 @@ class UserModel extends Database
     {
         return $this->read("SELECT * FROM users LIMIT ?", ["i", $limit]);
     }
+
+    public function deleteUser($id)
+    {
+        return $this->cud("DELETE FROM users WHERE id = ?", ["i", $id]);
+    }
 }
 ?>
