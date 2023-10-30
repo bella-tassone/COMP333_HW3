@@ -72,11 +72,13 @@ class RatingController extends BaseController
                     }
 
                     else{
-                        
+
                         if ($rating > 5 || $rating < 0) {
                             $strErrorDesc = "Rating must be between 1 and 5";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         }
+
+                        
 
             }
         }
