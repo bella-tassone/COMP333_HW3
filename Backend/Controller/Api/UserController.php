@@ -106,29 +106,35 @@ class UserController extends BaseController
                 $username = $postData['username'];
                 $password = $postData['password'];
 
-                $rows = $userModel->getUserPassword($username);
-                //if username doesn't match, row will be null
-                $row = $rows[0];
+                if ($username == "" || $password == "") {
+                    $strErrorDesc = "Not all fields filled out";
+                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                }
+                else {
+                    $rows = $userModel->getUserPassword($username);
+                    //if username doesn't match, row will be null
+                    $row = $rows[0];
 
-                if(!is_null($row)) {
-                    $hashed_pass = $row["password"];
-                    $password_match = password_verify($password, $hashed_pass);
+                    if(!is_null($row)) {
+                        $hashed_pass = $row["password"];
+                        $password_match = password_verify($password, $hashed_pass);
 
-                    if($password_match) {
-                        // success! user should be logged in
-                        $_SESSION["loggedin"] = true;
-                        $_SESSION["username"] = $user;
-                        $arrUser['message'] = 'login successful!';
-                        $responseData = json_encode($arrUser);
+                        if($password_match) {
+                            // success! user should be logged in
+                            $_SESSION["loggedin"] = true;
+                            $_SESSION["username"] = $user;
+                            $arrUser['message'] = 'login successful!';
+                            $responseData = json_encode($arrUser);
+                        }
+                        else {
+                            $strErrorDesc = "Username or password is incorrect.";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        }
                     }
                     else {
                         $strErrorDesc = "Username or password is incorrect.";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     }
-                }
-                else {
-                    $strErrorDesc = "Username or password is incorrect.";
-                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                 }
             } catch (Error $e) {
                 $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
