@@ -40,22 +40,32 @@ class RatingController extends BaseController
     
     public function createAction()
     {
-        // Get the request method (GET, POST, DELETE, etc.)
+        $strErrorDesc = '';
         $requestMethod = $_SERVER["REQUEST_METHOD"];
-
-        // Check if request method is POST
         if (strtoupper($requestMethod) == 'POST') {
+            try {
+                $postData = json_decode(file_get_contents('php://input'), true);
 
-            // retrieve user registration data from request body
-            $postData = json_decode(file_get_contents('php://input'), true);
-            $username = null; //session info
-            $song = $postData[1];
-            $artist = $postData[2];
-            // instatiate a RatingModel to create the rating
-            $userModel = new RatingModel();
-            $row = $userModel->getRating([$username, $song, $artist]);
-            if (is_null($row)) {
-                $userModel->createRating($postData);
+                if (!(array_key_exists('username', $postData) && array_key_exists('artist', $postData) && array_key_exists('song', $postData) && array_key_exists('rating', $postData))) {
+                    $strErrorDesc = "Not all data recieved";
+                    $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    }
+
+                else{
+                    $username = $postData["username"];
+                    $artist = $postData["artist"];
+                    $song = $postData["song"];
+                    $rating = $postData["rating"];
+
+                    if (($username == "") || ($artist == "") || ($song == "") || ($rating == "")) {
+                        $strErrorDesc = "Not all fields filled out";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    }
+
+                else{
+                    $userModel = new UserModel();
+                    
+                }
             }
         }
     }
