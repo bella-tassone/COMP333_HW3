@@ -40,23 +40,57 @@ class RatingController extends BaseController
     
     public function createAction()
     {
+        $strErrorDesc = '';
         // Get the request method (GET, POST, DELETE, etc.)
         $requestMethod = $_SERVER["REQUEST_METHOD"];
 
         // Check if request method is POST
         if (strtoupper($requestMethod) == 'POST') {
+            try {
+                $ratingModel = new RatingModel();
 
-            // retrieve user registration data from request body
-            $postData = json_decode(file_get_contents('php://input'), true);
-            $username = null; //session info
-            $song = $postData[1];
-            $artist = $postData[2];
-            // instatiate a RatingModel to create the rating
-            $userModel = new RatingModel();
-            $row = $userModel->getRating([$username, $song, $artist]);
-            if (is_null($row)) {
-                $userModel->createRating($postData);
+                // retrieve user registration data from request body
+                $postData = json_decode(file_get_contents('php://input'), true);
+                $song = $postData[0]['song'];
+                $artist = $postData[0]['artist'];
+                $rating = $postData[0]['rating'];
+                $user = $postData[0]['username']; //to be replaced with session variable
+
+                $rows = $ratingModel->getRating([$user, $song, $artist]);
+                //if no rows, $row will be null
+                $row = $rows[0];
+
+                if (is_null($row)) {
+                    $arrRating['code'] = $ratingModel->createRating([$user, $song, $artist, $rating]);
+                    if ($arrRating['code']) {
+                        $arrRating['message'] = 'Rating created successfully';
+                    } else {$arrRating['message'] = 'Rating creation unsuccessful';}
+                }
+                else {
+                    $arrRating['message'] = "User has already rated this song!";
+                }
+
+                $arrRating['info'] = $row;
+                $responseData = json_encode($arrRating);
+
+            } catch (Error $e) {
+                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
             }
+        } else {
+            $strErrorDesc = 'Method not supported';
+            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+        }
+        // send output 
+        if (!$strErrorDesc) {
+            $this->sendOutput(
+                $responseData,
+                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
+            );
+        } else {
+            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
+                array('Content-Type: application/json', $strErrorHeader)
+            );
         }
     }
 
