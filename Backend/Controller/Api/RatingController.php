@@ -47,7 +47,7 @@ class RatingController extends BaseController
                 $postData = json_decode(file_get_contents('php://input'), true);
 
                 if (!(array_key_exists('username', $postData) && array_key_exists('artist', $postData) && array_key_exists('song', $postData) && array_key_exists('rating', $postData))) {
-                    $strErrorDesc = "Not all data recieved";
+                    $strErrorDesc = "Not all data entered";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     }
 
@@ -58,14 +58,26 @@ class RatingController extends BaseController
                     $rating = $postData["rating"];
 
                     if (($username == "") || ($artist == "") || ($song == "") || ($rating == "")) {
-                        $strErrorDesc = "Not all fields filled out";
+                        $strErrorDesc = "Not all fields have value";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     }
 
                 else{
                     $userModel = new UserModel();
-                    
-                }
+                    $userExist = $userModel->checkUserExists($username);
+
+                    if (!$existsResult) {
+                        $strErrorDesc = "User not in database";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request'; 
+                    }
+
+                    else{
+                        
+                        if ($rating > 5 || $rating < 0) {
+                            $strErrorDesc = "Rating must be between 1 and 5";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                        }
+
             }
         }
     }
