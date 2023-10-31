@@ -9,9 +9,9 @@ require_once PROJECT_ROOT_PATH . "/Model/Database.php";
 class UserModel extends Database
 {
     // Creates a new user in the database
-    public function createUser($username, $hashed_password) 
+    public function createUser($username, $password) 
     {
-        $hashed_password = password_hash($userData[1], PASSWORD_DEFAULT);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         return $this->cud("INSERT INTO users (username, password) VALUES (?, ?)", ["ss", $username, $hashed_password]);
     }
 
