@@ -102,9 +102,8 @@ class UserController extends BaseController
                 $userModel = new UserModel();
                 $arrUser = [];
 
-                $postData = json_decode(file_get_contents('php://input'), true);
-                $username = $postData['username'];
-                $password = $postData['password'];
+                $username = $_GET['username'];
+                $password = $_GET['password'];
 
                 if ($username == "" || $password == "") {
                     $strErrorDesc = "Not all fields filled out";

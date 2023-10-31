@@ -12,6 +12,7 @@ function Registration() {
   }
 
   const handleSubmit = async (event) => {
+    event.preventDefault();
 
     try {
       const response = await axios.post('http://localhost/index.php/user/create', inputs);
