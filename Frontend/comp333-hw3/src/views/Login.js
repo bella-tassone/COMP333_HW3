@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function Login() {
   const [inputs, setInputs] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -21,6 +23,8 @@ function Login() {
       });
       if (response.status === 200) {
         alert('Login successful!');
+        navigate("/");
+
       } else {
         alert('Login failed. Please try again.');
       }
