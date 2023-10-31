@@ -14,23 +14,25 @@ function Registration() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-  try {
-    const response = await axios.post('http://localhost/index.php/user/create', inputs)
-    console.log('Response:', response.data);
-    const { message } = response.data;
-
-
-    if (message === 'User created successfully') {
-      alert('Registration successful!'); // You can customize this message
-    } else {
-      alert('Registration failed. Please try again.'); // You can handle the error as needed
-    }
-  } catch (error) {
-    console.error('API call error:', error);
-    alert('Registration failed. Please try again.'); // You can handle the error as needed
+    try {
+      const response = await axios.post('http://localhost/index.php/user/create', inputs);
+      console.log('Response:', response.data);
+      const { message } = response.data;
+      
+      if (response.status === 200) {
+        alert('Registration successful!');
+      } else {
+        alert('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('API call error:', error);
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(error.response.data.error); 
+      } else {
+        alert('An error occurred');
+      }
     }
   }
-
 
   return (
     <div>
