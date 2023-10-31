@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from "axios";
 
 function Login() {
-  const [inputs, setInputs] = useState({});
+  const [inputs, setInputs] = useState({ username: '', password: '' });
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -11,13 +11,23 @@ function Login() {
     setInputs(values => ({...values, [name]: value}))
   }
 
-  const handleSubmit = async () => {
-    /**
-    let res = await axios.get("https://localhost/index.php/user/login", {
-        username,
-        password
-    });
-    */
+  const handleSubmit = async (event) => {
+
+    try {
+      const response = await axios.post('http://localhost/index.php/user/login', inputs);
+      const { message } = response.data;
+      
+      if (response.status === 200) {
+        alert('Registration successful!');
+      }
+    } catch (error) {
+      console.error('API call error:', error);
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(error.response.data.error); 
+      } else {
+        alert('An error occurred');
+      }
+    }
   }
 
   return (
@@ -35,7 +45,7 @@ function Login() {
         <br/>
         <label>Password:
             <input 
-            type="text" 
+            type="password" 
             name="password" 
             value={inputs.password || ""} 
             onChange={handleChange}

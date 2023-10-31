@@ -12,17 +12,13 @@ function Registration() {
   }
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
 
     try {
       const response = await axios.post('http://localhost/index.php/user/create', inputs);
-      console.log('Response:', response.data);
       const { message } = response.data;
       
       if (response.status === 200) {
         alert('Registration successful!');
-      } else {
-        alert('Registration failed. Please try again.');
       }
     } catch (error) {
       console.error('API call error:', error);
@@ -49,7 +45,7 @@ function Registration() {
         <br />
         <label>Password:
           <input
-            type="password" // Change to password type
+            type="password"
             name="password"
             value={inputs.password}
             onChange={handleChange}
