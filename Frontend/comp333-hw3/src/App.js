@@ -16,17 +16,17 @@ function App() {
 
   return (
     <BrowserRouter>
+        <div style={{display:'flex', marginLeft:"20px"}}>
           <Routes>
-              <Route path="/" element={<Ratings username={username} loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>} />
-              <Route path="deleterating" element={<DeleteRating />} />
-              <Route path="updaterating" element={<UpdateRating />} />
+              <Route path="/" element={<Ratings />} />
               <Route path="login" element={<Login setLoggedIn={setLoggedIn} setUsername={setUsername} />} />
               <Route path="registration" element={<Registration />} />
-              <Route path="addrating" element={<AddRating />} />
-              <Route path="viewrating" element={<ViewRating />} />
-              <Route path="*" element={<NoPage />} />
           </Routes>
-        </BrowserRouter>
+          <div style={{marginLeft:"100px"}} >
+            <AddRating />
+          </div>
+        </div>
+    </BrowserRouter>
   );
 }
 

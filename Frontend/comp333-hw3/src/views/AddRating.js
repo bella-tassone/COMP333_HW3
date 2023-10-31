@@ -15,7 +15,7 @@ function AddRating() {
   }
 
   return (
-    <div>
+    <div style={{float:'right'}}>
         <h1>Add Rating</h1>
         <form onSubmit={handleSubmit}>
         <label>Song:
