@@ -90,7 +90,7 @@ function Ratings() {
                                                 </div>
                                                 <div style={{marginRight:'5px'}}>
                                                     <BsFillTrashFill id={`delete-icon${rating.id}`} ratingId={rating.id} onClick={() => clickDelete(rating.id)}/>
-                                                    <UncontrolledTooltip target={`delete-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px'}}>Delete<br/>your<br/>rating!</UncontrolledTooltip>
+                                                    <UncontrolledTooltip target={`delete-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Delete<br/>your<br/>rating!</UncontrolledTooltip>
                                                 </div>
                                             </div>
                                         )}

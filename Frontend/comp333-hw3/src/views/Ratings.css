@@ -6,3 +6,11 @@ td {
 .artist {
     color: grey;
 }
+
+.mainContainer {
+    margin: 0px 0px 0px 50px;
+}
+
+.titleContainer {
+    width: 100%;
+}
