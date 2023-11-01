@@ -132,7 +132,7 @@ class RatingController extends BaseController
     
                     //make sure rating in question belongs to the logged-in user
                     //conditional currently always returns true, to be compared against session info eventually
-                    if ($username == $user) {
+                    if ($username == $username) {
                         $arrRating['code'] = $ratingModel->deleteRating($id);
                         $arrRating['message'] = 'Rating deleted successfully';
                         $responseData = json_encode($arrRating);
