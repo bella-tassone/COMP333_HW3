@@ -8,11 +8,18 @@ import './Ratings.css';
 
 
 function Ratings(props) {
+    const [limit, setLimit] = useState(10);
     const [ratings, setRatings] = useState(null);
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
     const [dataChange, setDataChange] = useState(false);
     const user = localStorage.getItem('username');
+    const defaultLimit = 15;
+
+    const handleChange = (event) => {
+        const value = event.target.value;
+        setLimit(value);
+      };
 
     const handleDataChange = (props) => {
         setDataChange(!dataChange); 
@@ -20,7 +27,7 @@ function Ratings(props) {
       };
     
     useEffect(() => {
-        axios.get("http://localhost/index.php/rating/get")
+        axios.get(`http://localhost/index.php/rating/get?limit=${(localStorage.getItem('limit')) ?localStorage.getItem('limit') : defaultLimit}`)
         .then((response) => {
             setRatings(response.data);
         })
@@ -64,6 +71,17 @@ function Ratings(props) {
         <div className="mainContainer">
             <h1>Ratings</h1>
             {ratings && (<div className={"titleContainer"}>
+            <form onSubmit={() => localStorage.setItem('limit', parseInt(limit))}>
+                <label>Show
+                <input 
+                    type="number" 
+                    name="limit" 
+                    onChange={handleChange}
+                    style={{marginBottom:'10px', marginTop:'10px'}}
+                />songs.
+                </label>
+                <input id='limit-submit' type="submit" style={{marginTop:"10px", marginLeft:'10px'}}/>
+            </form>
                 <Table>
                     {ratings.map((rating) => (
                         <div key={rating.id}>
