@@ -17,14 +17,15 @@ function DeleteRating({ ratingId, onRatingDeleted }) {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost/index.php/rating/delete?id=${ratingId}`, {
+      const response = await axios.delete(`http://localhost/index.php/rating/delete?id=${ratingId}`, {
         data: {
           username: username,
         },
       });
-      console.log("Delete request sent with username:", username);
-
       setModal(false);
+      if (response.status === 200) {
+        alert('Deleted rating!');
+      }
     } catch (error) {
       console.error('API call error:', error);
   

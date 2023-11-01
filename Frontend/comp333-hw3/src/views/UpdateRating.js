@@ -5,18 +5,25 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 function UpdateRating({ song, artist, ratingId, prevRating }) {
   const [modal, setModal] = useState(true);
   const [input, setInput] = useState({ rating: prevRating });
+  const username = sessionStorage.getItem('username');
 
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    setInput({ ...input, [name]: value });
+    setInput({ ...input, rating: parseInt(value, 10)});
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const payload = {
+      ...input,
+      username: username,
+    };
+
+
     try {
-      const response = await axios.put(`http://localhost/index.php/rating/update?id=${ratingId}`, input);
+      const response = await axios.put(`http://localhost/index.php/rating/update?id=${ratingId}`, payload);
 
       if (response.status === 200) {
         alert('Rating updated successfully');

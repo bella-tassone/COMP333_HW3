@@ -118,6 +118,8 @@ class RatingController extends BaseController
         if (strtoupper($requestMethod) == 'DELETE') {
             try {
                 $ratingModel = new RatingModel();
+                $postData = json_decode(file_get_contents('php://input'), true);
+
 
                 $id = null;
                 if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
@@ -127,12 +129,12 @@ class RatingController extends BaseController
                     //should only be one row since ids are unique
                     $row = $rows[0];
                     $username = $row['username'];
-                    $user = $_SESSION["username"]; //session variable
+                    $user = $postData['username'];
                     $arrRating = [];
     
                     //make sure rating in question belongs to the logged-in user
                     //conditional currently always returns true, to be compared against session info eventually
-                    if ($username == $username) {
+                    if ($username == $user) {
                         $arrRating['code'] = $ratingModel->deleteRating($id);
                         $arrRating['message'] = 'Rating deleted successfully';
                         $responseData = json_encode($arrRating);
@@ -179,6 +181,8 @@ class RatingController extends BaseController
         if (strtoupper($requestMethod) == 'PUT') {
             try {
                 $ratingModel = new RatingModel();
+                $postData = json_decode(file_get_contents('php://input'), true);
+
 
                 $id = null;
                 if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
@@ -191,7 +195,7 @@ class RatingController extends BaseController
                     $song = $row['song'];
                     $artist = $row['artist'];
                     $rating = $row['rating'];
-                    $user = $_SESSION["username"]; //session variable
+                    $user = $postData['username'];
                     $arrRating = [];
     
                     $postData = json_decode(file_get_contents('php://input'), true);
@@ -199,7 +203,7 @@ class RatingController extends BaseController
     
                     //make sure rating in question belongs to the logged-in user
                     //conditional currently always returns true, to be compared against session info eventually
-                    if ($username == $username) {
+                    if ($username == $user) {
                         if ($rating == "") {
                             $strErrorDesc = "Not all fields filled out";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
