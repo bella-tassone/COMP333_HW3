@@ -95,14 +95,15 @@ function Ratings(dataChanges) {
                 </label>
                 <input id='limit-submit' type="submit" style={{marginTop:"10px", marginLeft:'10px'}}/>
                 <Button id='show-all-button' onClick={showAll} style={{ marginTop: "10px", marginLeft: '10px' }}>
-                Show All
+                Show All 
+                <UncontrolledTooltip target='show-all-button' placement='bottom' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginLeft:'5px'}}>Show All Entries!</UncontrolledTooltip>
                 </Button>
             </form>
             <p style={{ color: 'blue' }}>
                 {showAllClicked
                 ? 'You are currently showing all ratings in the system.'
                 : `You are currently showing the first ${localStorage.getItem('limit')} ratings in the system.`}
-            </p>            <UncontrolledTooltip target='limit-submit' placement='right' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginLeft:'5px'}}>Control how many<br/>entries you see!</UncontrolledTooltip>
+            </p>            <UncontrolledTooltip target='limit-submit' placement='bottom' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginLeft:'5px'}}>Control how many<br/>entries you see!</UncontrolledTooltip>
                 <Table>
                     {ratings.map((rating) => (
                         <div key={rating.id}>
