@@ -25,6 +25,8 @@ function UpdateRating({ song, artist, ratingId, prevRating, onUpdate, onDataChan
       if (response.status === 200) {
         alert('Rating updated successfully');
         setModal(false);
+        onUpdate();
+        onDataChange();
       } else {
         alert('Failed to update rating. Please try again.');
       }
