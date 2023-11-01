@@ -100,7 +100,7 @@ function Ratings(dataChanges) {
                 </Button>
             </form>
             <p style={{ color: 'blue' }}>
-                {showAllClicked
+                {((localStorage.getItem('limit')) > 99999)
                 ? 'You are currently showing all ratings in the system.'
                 : `You are currently showing the first ${localStorage.getItem('limit')} ratings in the system.`}
             </p>            <UncontrolledTooltip target='limit-submit' placement='bottom' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginLeft:'5px'}}>Control how many<br/>entries you see!</UncontrolledTooltip>
