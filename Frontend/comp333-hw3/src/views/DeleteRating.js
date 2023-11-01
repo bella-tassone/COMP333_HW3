@@ -18,7 +18,13 @@ function DeleteRating({ ratingId, onRatingDeleted }) {
       await axios.delete(`http://localhost/index.php/rating/delete?id=${ratingId}`);
       setModal(false);
     } catch (error) {
-      alert("Error deleting rating: " + error.message);
+      console.error('API call error:', error);
+
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(error.response.data.error);
+      } else {
+        alert('An error occurred');
+      }
     }
   };
 
@@ -26,7 +32,7 @@ function DeleteRating({ ratingId, onRatingDeleted }) {
     <Modal isOpen={modal}>
       <ModalHeader>Are you sure that you want to delete this rating?</ModalHeader>
       <ModalBody>
-        <p>Rating: {ratingData ? ratingData.rating : "Loading..."} </p>
+        <p>Rating ID: {ratingId} </p>
       </ModalBody>
       <ModalFooter>
         <Button color="primary" onClick={handleDelete}>
