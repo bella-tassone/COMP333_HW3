@@ -5,7 +5,6 @@ import { UncontrolledTooltip } from 'reactstrap';
 
 function AddRating() {
   const [inputs, setInputs] = useState({});
-  const [error, setError] = useState('');
   const username = localStorage.getItem('username');
   const [count, setCount] = useState(0);
 

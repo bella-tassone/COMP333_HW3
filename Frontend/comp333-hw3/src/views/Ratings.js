@@ -31,10 +31,6 @@ function Ratings(props) {
         return null;
     }
 
-    const isUserRating = (rating) => {
-        return user === rating.username;
-      };
-
       const clickUpdate = (rating) => {
         setUpdateRating((updateRating) =>
         updateRating === rating ? null : rating
