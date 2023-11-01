@@ -23,7 +23,7 @@ function Login() {
       });
       if (response.status === 200) {
         alert('Login successful!');
-        sessionStorage.setItem('username', inputs.username);
+        localStorage.setItem('username', inputs.username);
         navigate("/");
 
       } else {

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Router, Routes, Route } from "react-router-dom";
 import Ratings from "./views/Ratings";
 import DeleteRating from "./views/DeleteRating";
 import UpdateRating from "./views/UpdateRating";
@@ -8,25 +8,57 @@ import NoPage from "./views/NoPage";
 import AddRating from "./views/AddRating";
 import ViewRating from "./views/ViewRating";
 import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
+import './App.css';
+
 
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("username");
+    if (loggedInUser) {
+      setUsername(loggedInUser);
+      setLoggedIn(true);
+    }
+  });
+
+  const logout = () => {
+    localStorage.removeItem("username");
+    setUsername("");
+    setLoggedIn(false);
+  }
 
   return (
-    <BrowserRouter>
-        <div style={{display:'flex', marginLeft:"20px"}}>
-          <Routes>
-              <Route path="/" element={<Ratings />} />
-              <Route path="login" element={<Login setLoggedIn={setLoggedIn} setUsername={setUsername} />} />
-              <Route path="registration" element={<Registration />} />
-          </Routes>
+      <div style={{display:'inline-flex',marginLeft:"20px"}}>
+        <Routes>
+            <Route path="/" element={<Ratings />} />
+            <Route path="login" element={<Login />} />
+            <Route path="registration" element={<Registration />} />
+        </Routes>
+        {loggedIn && (
           <div style={{marginLeft:"100px"}} >
-            <AddRating />
+          <AddRating />
           </div>
-        </div>
-    </BrowserRouter>
+        )}
+          <div style={{position:'relative'}}>
+            {(!loggedIn && location.pathname === '/') && (
+              <button className="login-button" onClick={() => navigate("login")}>
+                Login
+              </button>
+            )}
+            {loggedIn && (
+              <button className="logout-button" onClick={() => logout()}>
+                Log Out
+              </button>
+            )}
+          </div>
+      </div>
   );
 }
 
