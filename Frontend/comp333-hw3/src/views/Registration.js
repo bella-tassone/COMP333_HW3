@@ -8,6 +8,10 @@ function Registration() {
   const [inputs, setInputs] = useState({ username: '', password1: '', password2: ''});
   const navigate = useNavigate();
 
+  if(localStorage.getItem('username')) {
+    navigate("/");
+  }
+
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;

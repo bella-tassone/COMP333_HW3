@@ -5,9 +5,14 @@ import axios from 'axios';
 import { UncontrolledTooltip } from 'reactstrap';
 
 function Login() {
+
   const [inputs, setInputs] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  if(localStorage.getItem('username')) {
+    navigate("/");
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target;
