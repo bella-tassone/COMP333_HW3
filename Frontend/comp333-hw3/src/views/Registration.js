@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 function Registration() {
   const [inputs, setInputs] = useState({ username: '', password: '' });
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -20,6 +22,8 @@ function Registration() {
       
       if (response.status === 200) {
         alert('Registration successful!');
+        localStorage.setItem('username', inputs.username);
+        navigate("/");
       }
     } catch (error) {
       console.error('API call error:', error);

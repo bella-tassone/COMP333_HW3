@@ -11,9 +11,6 @@ function Ratings() {
     const [ratings, setRatings] = useState("");
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
-
-
-
     const user = localStorage.getItem('username');
 
     
@@ -81,7 +78,7 @@ function Ratings() {
                                         {stars(rating.rating)}
                                     </td>
                                     <td>
-                                        {true && (
+                                        {(user === rating.username) && (
                                             <div style={{display:'inline-flex'}} >
                                                 <div style={{marginRight:'20px'}}>
                                                     <BsPencilSquare id={`update-icon${rating.id}`} ratingId={rating.id} onClick={() => clickUpdate(rating.id)}/>
@@ -97,10 +94,10 @@ function Ratings() {
                                 </tr>
                             </tbody>
                             <div>
-                                {(deleteRating===rating.id) && (
+                                {(user) && (deleteRating===rating.id) && (
                                     <DeleteRating ratingId={deleteRating} onDelete={() => setDeleteRating(null)}/>
                                 )}
-                                {(updateRating===rating.id) && (
+                                {(user) && (updateRating===rating.id) && (
                                     <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating}/>
                                 )}
                             </div>
@@ -109,7 +106,6 @@ function Ratings() {
                 </Table>
             </div>
             <div>
-            <h1>Hello, {user}</h1>
              </div>
         </div>
     );

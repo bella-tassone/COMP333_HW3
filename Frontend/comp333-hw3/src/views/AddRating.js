@@ -4,7 +4,7 @@ import axios from 'axios';
 function AddRating() {
   const [inputs, setInputs] = useState({});
   const [error, setError] = useState('');
-  const username = sessionStorage.getItem('username');
+  const username = localStorage.getItem('username');
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -38,6 +38,7 @@ function AddRating() {
   return (
     <div style={{float:'right'}}>
         <h1>Add Rating</h1>
+        <p>Username: {username}</p>
         <form onSubmit={handleSubmit}>
         <label>Song:
         <input 
