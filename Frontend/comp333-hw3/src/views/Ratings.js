@@ -8,7 +8,7 @@ import './Ratings.css';
 
 
 function Ratings(props) {
-    const [ratings, setRatings] = useState("");
+    const [ratings, setRatings] = useState(null);
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
     const [dataChange, setDataChange] = useState(false);
@@ -25,9 +25,11 @@ function Ratings(props) {
             setRatings(response.data);
         })
         .catch(err => console.log(err));
-    }, [dataChange, props.DataChange]);
+    }, [dataChange, props.dataChange]);
 
-    if (!ratings) return null;
+    if (!ratings) {
+        return null;
+    }
 
     const isUserRating = (rating) => {
         return user === rating.username;
@@ -65,7 +67,7 @@ function Ratings(props) {
     return(
         <div className="mainContainer">
             <h1>Ratings</h1>
-            <div className={"titleContainer"}>
+            {ratings && (<div className={"titleContainer"}>
                 <Table>
                     {ratings.map((rating) => (
                         <div key={rating.id}>
@@ -89,7 +91,7 @@ function Ratings(props) {
                                     <td>
                                         {(user === rating.username) && (
                                             <div style={{display:'inline-flex'}} >
-                                                <div style={{marginRight:'20px'}}>
+                                                <div id='update-icon' style={{marginRight:'20px'}}>
                                                     <BsPencilSquare id={`update-icon${rating.id}`} ratingId={rating.id} onClick={() => clickUpdate(rating.id)}/>
                                                     <UncontrolledTooltip target={`update-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Edit<br/>your<br/>rating!</UncontrolledTooltip>
                                                 </div>
@@ -114,8 +116,7 @@ function Ratings(props) {
                     ))}
                 </Table>
             </div>
-            <div>
-             </div>
+            )}
         </div>
     );
 }

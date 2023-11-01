@@ -6,7 +6,6 @@ import Login from "./views/Login";
 import Registration from "./views/Registration";
 import NoPage from "./views/NoPage";
 import AddRating from "./views/AddRating";
-import ViewRating from "./views/ViewRating";
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import './App.css';
@@ -42,7 +41,7 @@ function App() {
   return (
       <div style={{display:'inline-flex',marginLeft:"20px"}}>
         <Routes>
-            <Route path="/" element={<Ratings DataChanged={dataChange} />} />
+            <Route path="/" element={<Ratings dataChange={dataChange} />} />
             <Route path="login" element={<Login />} />
             <Route path="registration" element={<Registration />} />
         </Routes>
@@ -51,7 +50,7 @@ function App() {
           <AddRating onRatingAdded={refreshRatingsData} />
           </div>
         )}
-          <div style={{position:'relative'}}>
+          <div>
             {(!loggedIn && location.pathname === '/') && (
               <button className="login-button" onClick={() => navigate("login")}>
                 Login

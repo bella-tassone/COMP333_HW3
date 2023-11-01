@@ -21,7 +21,7 @@ function UpdateRating({song, artist, ratingId, prevRating}) {
   }
 
   return (
-    <Modal isOpen={modal}>
+    <Modal style={{marginLeft:'50px'}} isOpen={modal}>
     <ModalHeader>Update Rating</ModalHeader>
     <ModalBody>
       <label>Song:</label>

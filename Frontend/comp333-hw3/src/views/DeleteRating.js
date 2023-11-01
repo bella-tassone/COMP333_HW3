@@ -29,7 +29,7 @@ function DeleteRating({ ratingId, onRatingDeleted }) {
   };
 
   return (
-    <Modal isOpen={modal}>
+    <Modal style={{marginLeft:'50px'}} isOpen={modal}>
       <ModalHeader>Are you sure that you want to delete this rating?</ModalHeader>
       <ModalBody>
         <p>Rating ID: {ratingId} </p>
