@@ -3,7 +3,7 @@ import axios from "axios";
 import { BsFillStarFill, BsStar, BsPencilSquare, BsFillTrashFill} from "react-icons/bs";
 import DeleteRating from "./DeleteRating";
 import UpdateRating from "./UpdateRating";
-import { UncontrolledTooltip, Table } from 'reactstrap';
+import { UncontrolledTooltip, Table, Button } from 'reactstrap';
 import './Ratings.css';
 
 
@@ -13,6 +13,7 @@ function Ratings(dataChanges) {
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
     const [dataChange, setDataChange] = useState(dataChanges);
+    const [showAllClicked, setShowAllClicked] = useState(false);
     const user = localStorage.getItem('username');
     const defaultLimit = 15;
 
@@ -62,6 +63,22 @@ function Ratings(dataChanges) {
         return <div>{stars}</div>;
     };
 
+    const showAll = async () => {
+        const value = 100000;
+        setLimit(value);
+        localStorage.setItem('limit', value);
+        setShowAllClicked(true);
+
+        try {
+            const response = await axios.get('http://localhost/index.php/rating/get?limit=100000');
+            if (response.status === 200) {
+                setRatings(response.data);
+            } else {
+            }
+        } catch (error) {
+        }
+      };
+
     return(
         <div className="mainContainer">
             <h1>Ratings</h1>
@@ -77,9 +94,15 @@ function Ratings(dataChanges) {
                 />songs.
                 </label>
                 <input id='limit-submit' type="submit" style={{marginTop:"10px", marginLeft:'10px'}}/>
+                <Button id='show-all-button' onClick={showAll} style={{ marginTop: "10px", marginLeft: '10px' }}>
+                Show All
+                </Button>
             </form>
-            <p style={{color:'blue'}}> You are currently showing the first {localStorage.getItem('limit')} ratings in the system.</p>
-            <UncontrolledTooltip target='limit-submit' placement='right' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginLeft:'5px'}}>Control how many<br/>entries you see!</UncontrolledTooltip>
+            <p style={{ color: 'blue' }}>
+                {showAllClicked
+                ? 'You are currently showing all ratings in the system.'
+                : `You are currently showing the first ${localStorage.getItem('limit')} ratings in the system.`}
+            </p>            <UncontrolledTooltip target='limit-submit' placement='right' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginLeft:'5px'}}>Control how many<br/>entries you see!</UncontrolledTooltip>
                 <Table>
                     {ratings.map((rating) => (
                         <div key={rating.id}>
