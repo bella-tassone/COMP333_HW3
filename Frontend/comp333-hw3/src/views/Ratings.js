@@ -9,7 +9,7 @@ import './Ratings.css';
 
 function Ratings() {
     const [ratings, setRatings] = useState("");
-
+    const username = sessionStorage.getItem('username');
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
 
@@ -109,6 +109,9 @@ function Ratings() {
                     ))}
                 </Table>
             </div>
+            <div>
+            <h1>Hello, {username}</h1>
+             </div>
         </div>
     );
 }
