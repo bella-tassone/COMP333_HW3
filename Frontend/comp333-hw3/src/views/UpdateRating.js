@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-
-function UpdateRating({song, artist, ratingId, prevRating, onUpdate, onDataChange}) {
+function UpdateRating({ song, artist, ratingId, prevRating, onUpdate, onDataChange }) {
   const [modal, setModal] = useState(true);
   const [input, setInput] = useState({ rating: parseInt(prevRating, 10) });
   const username = sessionStorage.getItem('username');
@@ -14,9 +13,7 @@ function UpdateRating({song, artist, ratingId, prevRating, onUpdate, onDataChang
     setInput({ ...input, rating: parseInt(value, 10) });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleUpdate = async () => {
     const payload = {
       rating: input.rating,
       username: username,
@@ -33,54 +30,61 @@ function UpdateRating({song, artist, ratingId, prevRating, onUpdate, onDataChang
       }
     } catch (error) {
       console.error('API call error:', error);
+    }
+  };
 
-
-  const handleSubmit = async () => {
-    let res = await axios.delete(`${"http://localhost/index.php/rating/update"}?${ratingId}`, {
-      params: input
-    })
-    .then(() => alert("Rating successfully deleted!"))
-    .catch(() => alert("There was a problem, deletion aborted."));
-    setModal(false);
-    onUpdate();
-    onDataChange();
-  }
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost/index.php/rating/update?id=${ratingId}`, { params: input });
+      alert('Rating successfully deleted!');
+      setModal(false);
+      onUpdate();
+      onDataChange();
+    } catch (error) {
+      alert('There was a problem, deletion aborted.');
+      console.error('API call error:', error);
+    }
+  };
 
   const handleCancel = () => {
-    setInput('');
+    setInput({ rating: parseInt(prevRating, 10) });
     setModal(false);
     onUpdate();
   }
 
   return (
-    <Modal style={{marginLeft:'50px'}} isOpen={modal}>
-    <ModalHeader>Update Rating</ModalHeader>
-    <ModalBody>
-      <label>Song:</label>
-      <span>{song}</span>
-      <br/>
-      <label>Artist:</label>
-      <span>{artist}</span>
-      <br/>
-      <label>Rating:
-        <input 
-          type="number" 
-          name="rating" 
-          value={input.rating}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </label>
-    </ModalBody>
-    <ModalFooter>
-      <Button color="primary" onClick={handleSubmit}>
-        Update
-      </Button>{' '}
-      <Button color="secondary" onClick={() => handleCancel()}>
-        Cancel
-      </Button>
-    </ModalFooter>
-  </Modal>
-  )
+    <Modal style={{ marginLeft: '50px' }} isOpen={modal}>
+      <ModalHeader>Update Rating</ModalHeader>
+      <ModalBody>
+        <label>Song:</label>
+        <span>{song}</span>
+        <br />
+        <label>Artist:</label>
+        <span>{artist}</span>
+        <br />
+        <label>
+          Rating:
+          <input
+            type="number"
+            name="rating"
+            value={input.rating}
+            onChange={handleChange}
+          />
+        </label>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="primary" onClick={handleUpdate}>
+          Update
+        </Button>{' '}
+        <Button color="danger" onClick={handleDelete}>
+          Delete
+        </Button>{' '}
+        <Button color="secondary" onClick={handleCancel}>
+          Cancel
+        </Button>
+      </ModalFooter>
+    </Modal>
+  );
 }
 
 export default UpdateRating;
