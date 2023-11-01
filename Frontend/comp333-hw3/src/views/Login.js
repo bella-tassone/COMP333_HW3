@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { UncontrolledTooltip } from 'reactstrap';
+import './Ratings.css';
 
 function Login() {
 
@@ -77,6 +78,12 @@ function Login() {
         {error && <div className="error-message">{error}</div>}
         <Link to="/registration">Don't have an account? Sign up here.</Link>
       </form>
+      <div>
+        <button className="home-button" id='home' onClick={() => navigate("/")}>
+          Home
+        </button>
+        <UncontrolledTooltip target='home' placement='left' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginRight:'5px', marginTop:'5px'}}>Return to the<br/>main page!</UncontrolledTooltip>
+      </div>
     </div>
   );
 }

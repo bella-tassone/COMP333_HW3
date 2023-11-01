@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { UncontrolledTooltip } from 'reactstrap';
+import './Ratings.css';
+
 
 function Registration() {
   const [inputs, setInputs] = useState({ username: '', password1: '', password2: ''});
@@ -78,6 +80,12 @@ function Registration() {
         <br />
         <Link to="/login">Already have an account? Login here.</Link>
       </form>
+      <div>
+        <button className="home-button" id='home' onClick={() => navigate("/")}>
+          Home
+        </button>
+        <UncontrolledTooltip target='home' placement='left' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginRight:'5px', marginTop:'5px'}}>Return to the<br/>main page!</UncontrolledTooltip>
+      </div>
     </div>
   );
 }

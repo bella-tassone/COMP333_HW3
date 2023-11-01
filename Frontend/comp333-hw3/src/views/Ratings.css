@@ -14,3 +14,9 @@ td {
 .titleContainer {
     width: 100%;
 }
+
+.home-button {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+  }
