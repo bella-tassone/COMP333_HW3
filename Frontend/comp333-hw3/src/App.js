@@ -1,21 +1,19 @@
-import { Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Ratings from "./views/Ratings";
-import DeleteRating from "./views/DeleteRating";
-import UpdateRating from "./views/UpdateRating";
 import Login from "./views/Login";
 import Registration from "./views/Registration";
-import NoPage from "./views/NoPage";
 import AddRating from "./views/AddRating";
-import ViewRating from "./views/ViewRating";
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import './App.css';
+import { UncontrolledTooltip } from 'reactstrap';
+
 
 
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
+  const [dataChange, setDataChange] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -23,39 +21,47 @@ function App() {
   useEffect(() => {
     const loggedInUser = localStorage.getItem("username");
     if (loggedInUser) {
-      setUsername(loggedInUser);
       setLoggedIn(true);
     }
   });
 
   const logout = () => {
     localStorage.removeItem("username");
-    setUsername("");
     setLoggedIn(false);
   }
+
+  const refreshRatingsData = () => {
+    setDataChange(!dataChange);
+  };
 
   return (
       <div style={{display:'inline-flex',marginLeft:"20px"}}>
         <Routes>
-            <Route path="/" element={<Ratings />} />
+            <Route path="/" element={<Ratings dataChange={dataChange} />} />
             <Route path="login" element={<Login />} />
             <Route path="registration" element={<Registration />} />
         </Routes>
         {loggedIn && (
           <div style={{marginLeft:"100px"}} >
-          <AddRating />
+          <AddRating onRatingAdded={refreshRatingsData} />
           </div>
         )}
-          <div style={{position:'relative'}}>
+          <div>
             {(!loggedIn && location.pathname === '/') && (
-              <button className="login-button" onClick={() => navigate("login")}>
-                Login
-              </button>
+              <div>
+                <button className="login-button" id='login' onClick={() => navigate("login")}>
+                  Login
+                </button>
+                <UncontrolledTooltip target='login' placement='left' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginRight:'5px', marginTop:'5px'}}>Login to your<br/>account here!</UncontrolledTooltip>
+              </div>
             )}
             {loggedIn && (
-              <button className="logout-button" onClick={() => logout()}>
-                Log Out
-              </button>
+              <div>
+                <button className="logout-button" id='logout' onClick={() => logout()}>
+                  Log Out
+                </button>
+                <UncontrolledTooltip target='logout' placement='left' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginRight:'5px', marginTop:'5px'}}>Log out of your<br/>account here!</UncontrolledTooltip>
+              </div>
             )}
           </div>
       </div>

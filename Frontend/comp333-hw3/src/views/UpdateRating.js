@@ -16,8 +16,13 @@ function UpdateRating({song, artist, ratingId, prevRating}) {
     setModal(false);
   }
 
+  const handleCancel = () => {
+    setInput('');
+    setModal(false);
+  }
+
   return (
-    <Modal isOpen={modal}>
+    <Modal style={{marginLeft:'50px'}} isOpen={modal}>
     <ModalHeader>Update Rating</ModalHeader>
     <ModalBody>
       <label>Song:</label>
@@ -39,7 +44,7 @@ function UpdateRating({song, artist, ratingId, prevRating}) {
       <Button color="primary" onClick={handleSubmit}>
         Update
       </Button>{' '}
-      <Button color="secondary" onClick={() => setModal(false)}>
+      <Button color="secondary" onClick={() => handleCancel()}>
         Cancel
       </Button>
     </ModalFooter>
