@@ -70,6 +70,8 @@ function AddRating({onChanges}) {
             <input 
             type="number" 
             name="rating" 
+            min="1"
+            max="5"
             value={inputs.rating || ""} 
             onChange={handleChange}
             style={{marginLeft:'5px'}}
