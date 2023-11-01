@@ -8,7 +8,7 @@ function DeleteRating({ ratingId, onDelete, onDataChange }) {
 
   useEffect(() => {
     // Fetch rating data based on ratingId
-    axios.get(`http://localhost/index.php/rating/${ratingId}`)
+    axios.get(`http://localhost/index.php/rating/get?id=${ratingId}`)
       .then(response => setRatingData(response.data))
       .catch(error => console.error("Error fetching rating data:", error));
   }, [ratingId]);
