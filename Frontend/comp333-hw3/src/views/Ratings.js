@@ -104,10 +104,10 @@ function Ratings(props) {
                             </tbody>
                             <div>
                                 {(user) && (deleteRating===rating.id) && (
-                                    <DeleteRating ratingId={deleteRating} onDelete={() => setDeleteRating(null)} onDataChange={handleDataChange}/>
+                                    <DeleteRating ratingId={deleteRating} onDelete={() => clickDelete(rating)} onDataChange={handleDataChange}/>
                                 )}
                                 {(user) && (updateRating===rating.id) && (
-                                    <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating} onDelete={() => clickDelete(rating)} onDataChange={handleDataChange}/>
+                                    <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating} onDelete={() => clickUpdate(rating)} onDataChange={handleDataChange}/>
                                 )}
                             </div>
                         </div>
