@@ -4,23 +4,22 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 function UpdateRating({ song, artist, ratingId, prevRating }) {
   const [modal, setModal] = useState(true);
-  const [input, setInput] = useState({ rating: prevRating });
+  const [input, setInput] = useState({ rating: parseInt(prevRating, 10) });
   const username = sessionStorage.getItem('username');
 
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    setInput({ ...input, rating: parseInt(value, 10)});
+    setInput({ ...input, rating: parseInt(value, 10) });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const payload = {
-      ...input,
+      rating: input.rating,
       username: username,
     };
-
 
     try {
       const response = await axios.put(`http://localhost/index.php/rating/update?id=${ratingId}`, payload);
@@ -44,33 +43,34 @@ function UpdateRating({ song, artist, ratingId, prevRating }) {
 
   return (
     <Modal isOpen={modal}>
-    <ModalHeader>Update Rating</ModalHeader>
-    <ModalBody>
-      <label>Song:</label>
-      <span>{song}</span>
-      <br/>
-      <label>Artist:</label>
-      <span>{artist}</span>
-      <br/>
-      <label>Rating:
-        <input 
-          type="number" 
-          name="rating" 
-          value={input.rating}
-          onChange={(e) => setInput(e.target.value)}
-        />
-      </label>
-    </ModalBody>
-    <ModalFooter>
-      <Button color="primary" onClick={handleSubmit}>
-        Update
-      </Button>{' '}
-      <Button color="secondary" onClick={() => setModal(false)}>
-        Cancel
-      </Button>
-    </ModalFooter>
-  </Modal>
-  )
+      <ModalHeader>Update Rating</ModalHeader>
+      <ModalBody>
+        <label>Song:</label>
+        <span>{song}</span>
+        <br />
+        <label>Artist:</label>
+        <span>{artist}</span>
+        <br />
+        <label>
+          Rating:
+          <input
+            type="number"
+            name="rating"
+            value={input.rating}
+            onChange={handleChange}
+          />
+        </label>
+      </ModalBody>
+      <ModalFooter>
+        <Button color="primary" onClick={handleSubmit}>
+          Update
+        </Button>{' '}
+        <Button color="secondary" onClick={() => setModal(false)}>
+          Cancel
+        </Button>
+      </ModalFooter>
+    </Modal>
+  );
 }
 
 export default UpdateRating;

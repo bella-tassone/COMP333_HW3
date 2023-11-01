@@ -70,7 +70,7 @@ class RatingController extends BaseController
                     //check to make sure rating is an int between 1 and 5
                     elseif ((!is_int($rating)) || ($rating > 5 || $rating < 1)) {
 
-                        $strErrorDesc = "Rating must be an integer between 0 and 5";
+                        $strErrorDesc = "Rating must be an integer between 1 and 5";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
 
                     //check to make sure that song hasn't already been rated
@@ -213,6 +213,10 @@ class RatingController extends BaseController
                             $strErrorDesc = "Rating has not been changed";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         }
+                        elseif (!is_numeric($updatedRating) || $updatedRating < 1 || $updatedRating > 5) {
+                            $strErrorDesc = "Rating must be an integer between 1 and 5";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            }
                         else {
                             $arrRating['code'] = $ratingModel->updateRating([$song, $artist, $updatedRating, $id]);
                             $arrRating['message'] = 'Rating updated successfully';
