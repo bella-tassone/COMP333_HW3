@@ -9,6 +9,8 @@ import AddRating from "./views/AddRating";
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import './App.css';
+import { UncontrolledTooltip } from 'reactstrap';
+
 
 
 
@@ -52,14 +54,20 @@ function App() {
         )}
           <div>
             {(!loggedIn && location.pathname === '/') && (
-              <button className="login-button" onClick={() => navigate("login")}>
-                Login
-              </button>
+              <div>
+                <button className="login-button" id='login' onClick={() => navigate("login")}>
+                  Login
+                </button>
+                <UncontrolledTooltip target='login' placement='left' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginRight:'5px', marginTop:'5px'}}>Login to your<br/>account here!</UncontrolledTooltip>
+              </div>
             )}
             {loggedIn && (
-              <button className="logout-button" onClick={() => logout()}>
-                Log Out
-              </button>
+              <div>
+                <button className="logout-button" id='logout' onClick={() => logout()}>
+                  Log Out
+                </button>
+                <UncontrolledTooltip target='logout' placement='left' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginRight:'5px', marginTop:'5px'}}>Log out of your<br/>account here!</UncontrolledTooltip>
+              </div>
             )}
           </div>
       </div>

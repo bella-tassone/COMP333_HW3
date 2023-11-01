@@ -46,27 +46,33 @@ class UserController extends BaseController
                 $userModel = new UserModel();
                 $postData = json_decode(file_get_contents('php://input'), true);
 
-                if (!(array_key_exists('username', $postData) && array_key_exists('password', $postData))) {
+                if (!(array_key_exists('username', $postData) && array_key_exists('password1', $postData) && array_key_exists('password2', $postData))) {
                     $strErrorDesc = "Error: empty data";
                     $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     } 
                 
                 else {
                     $username = $postData["username"];
-                    $password = $postData["password"];
+                    $password1 = $postData["password1"];
+                    $password2 = $postData["password2"];
 
-                    if ($username == "" || $password == "") {
+
+                    if ($username == "" || $password1 == "" || $password2 == "") {
                         $strErrorDesc = "Error: empty data";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
-                    } elseif (strlen($password) < 10) {
+                    } elseif (strlen($password1) < 10) {
                         $strErrorDesc = "Password is less than 10 characters";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     } elseif ($userModel->checkUserExists($username)) {
                         $strErrorDesc = "Username already exists";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                     }
+                    elseif ($password1 != $password2) {
+                        $strErrorDesc = "Passwords do not match!";
+                        $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                    }
                     else{
-                        $userModel->createUser($username, $password);
+                        $userModel->createUser($username, $password1);
                         $userCreated = true;
                     }
                 }

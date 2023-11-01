@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { UncontrolledTooltip } from 'reactstrap';
 
 function Login() {
   const [inputs, setInputs] = useState({ username: '', password: '' });
@@ -51,6 +52,7 @@ function Login() {
             name="username"
             value={inputs.username || ''}
             onChange={handleChange}
+            style={{marginBottom:'10px'}}
           />
         </label>
         <br />
@@ -64,7 +66,8 @@ function Login() {
           />
         </label>
         <br />
-        <input type="submit" />
+        <input id='submit-login' type="submit" style={{marginTop:'10px', marginLeft:'90px', marginBottom:'5px'}}/>
+        <UncontrolledTooltip target='submit-login' placement='right' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginLeft:'5px'}}>Submit to login<br/>to your account!</UncontrolledTooltip>
         <br />
         {error && <div className="error-message">{error}</div>}
         <Link to="/registration">Don't have an account? Sign up here.</Link>
