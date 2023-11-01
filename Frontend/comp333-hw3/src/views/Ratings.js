@@ -105,11 +105,11 @@ function Ratings(dataChanges) {
                                             <div style={{display:'inline-flex'}} >
                                                 <div id='update-icon' style={{marginRight:'20px'}}>
                                                     <BsPencilSquare id={`update-icon${rating.id}`} onClick={() => clickUpdate(rating.id)}/>
-                                                    <UncontrolledTooltip target={`update-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Edit<br/>rating<br/>{rating.id}!</UncontrolledTooltip>
+                                                    <UncontrolledTooltip target={`update-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Edit<br/>rating<br/>#{rating.id}!</UncontrolledTooltip>
                                                 </div>
                                                 <div style={{marginRight:'5px'}}>
                                                     <BsFillTrashFill id={`delete-icon${rating.id}`} onClick={() => clickDelete(rating.id)}/>
-                                                    <UncontrolledTooltip target={`delete-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Delete<br/>rating<br/>{rating.id}!</UncontrolledTooltip>
+                                                    <UncontrolledTooltip target={`delete-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Delete<br/>rating<br/>#{rating.id}!</UncontrolledTooltip>
                                                 </div>
                                             </div>
                                         )}
