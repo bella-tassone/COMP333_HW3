@@ -42,30 +42,30 @@ define("DB_DATABASE_NAME", "music_db");
 
 ## File Directory
 
-- `.gitignore`:
-- `LICENSE`:
+- `.gitignore`
+- `LICENSE`
 - `README.md`
 
 ### Backend
 
-- `index.php`:
+- `index.php`: Used to create controller instances, and contains the logic for calling action functions in the user and rating controllers
 
 #### Controller/Api
 
-- `BaseController.php`:
-- `RatingController.php`:
-- `UserController.php`:
+- `BaseController.php`: Contains basic logic used in user and rating controllers via function call
+- `RatingController.php`: Contains the get, create, update, and delete actions for /ratings API calls
+- `UserController.php`: Contains the get, create, and login actions for /user API calls
 
 #### Model
 
-- `Database.php`:
-- `UserModel.php`:
-- `RatingModel.php`:
+- `Database.php`: Basic wrapper for interacting with the SQL database, and provides methods for performing CRUD operations
+- `UserModel.php`: Holds SQL queries in functions called in the userController and returns data from the SQL database to be processed into the view (frontend)
+- `RatingModel.php`: Holds SQL queries in functions called in the ratingController and returns data from the SQL database to be processed into the view (frontend)
 
 #### inc
 
-- `bootstrap.php`:
-- `config.php`:
+- `bootstrap.php`: Contains paths for the controllers and models to be referenced throughout the backend code files
+- `config.php`: Contains specifics relating to establishing database connection
 
 ### Frontend/comp333-hw3
 
@@ -81,17 +81,25 @@ For brevity, we will only go over files that have been actively worked on.
 
 #### src
 
-- `App.js`:
-- `App.css`:
-- `index.js`:
+- `App.js`: Contains the main component of the website, as well as crucial logic for logging in / displaying components to improve UX
+- `App.css`: Styling for app.js
+- `index.js`: contains the reactDOM and "root" of the application
 
 #### views
 
-- `AddRating.js`:
-- `DeleteRating.js`:
-- `Login.js`:
-- `NoPage.js`:
-- `Ratings.css`:
-- `Ratings.js`:
-- `Registration.js`:
-- `UpdateRating.js`:
+- `AddRating.js`: Logic and API integration for a user adding a rating, and component form for a user to input a rating to add
+- `DeleteRating.js`: Logic and API integration for a user adding a rating, and component for a user to submit a delete request
+- `Login.js`: Login form component and API integration for user login
+- `NoPage.js`: Used when a URL not found is requested (i.e. "/thispagedoesnotexist")
+- `Ratings.css`: Styles the rating.js component
+- `Ratings.js`: Logic for displaying the ratings and user interaction with their own ratings, and uses function calls from Add, Delete, Update rating.js files
+- `Registration.js`: Registration form component and API integration for user login
+- `UpdateRating.js`: Logic and API integration for a user adding a rating, and component for a user to submit an update request
+
+#### Additional Feature
+- `ToolTips`: We have implemented ToolTips, or pop-ups displayed when a user's mouse hovers over a certain element. Those tooltips are integrated via UncontrolledTooltip tags in the react.js code. They not only improve the UX, but do so in an instructive manner, as the tips assist with navigation and functionality.
+
+Developers🧑‍🔬:
+Nate Levinson and Bella Tassone
+
+HW3 participation📝: 50/50 split
