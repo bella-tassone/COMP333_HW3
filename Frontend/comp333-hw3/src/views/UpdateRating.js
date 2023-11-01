@@ -1,20 +1,39 @@
-import { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-
-function UpdateRating({song, artist, ratingId, prevRating}) {
+function UpdateRating({ song, artist, ratingId, prevRating }) {
   const [modal, setModal] = useState(true);
-  const [input, setInput] = useState({rating:prevRating});
+  const [input, setInput] = useState({ rating: prevRating });
 
-  const handleSubmit = async () => {
-    let res = await axios.delete(`${"http://localhost/index.php/rating/update"}?${ratingId}`, {
-      params: input
-    })
-    .then(() => alert("Rating successfully deleted!"))
-    .catch(() => alert("There was a problem, deletion aborted."));
-    setModal(false);
-  }
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInput({ ...input, [name]: value });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.put(`http://localhost/index.php/rating/update?id=${ratingId}`, input);
+
+      if (response.status === 200) {
+        alert('Rating updated successfully');
+        setModal(false);
+      } else {
+        alert('Failed to update rating. Please try again.');
+      }
+    } catch (error) {
+      console.error('API call error:', error);
+
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(error.response.data.error);
+      } else {
+        alert('An error occurred');
+      }
+    }
+  };
 
   return (
     <Modal isOpen={modal}>
