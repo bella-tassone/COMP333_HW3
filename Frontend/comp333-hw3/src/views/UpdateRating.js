@@ -35,18 +35,6 @@ function UpdateRating({ song, artist, ratingId, prevRating, onUpdate, onDataChan
     }
   };
 
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`http://localhost/index.php/rating/update?id=${ratingId}`, { params: input });
-      alert('Rating successfully deleted!');
-      setModal(false);
-      onUpdate();
-      onDataChange();
-    } catch (error) {
-      alert('There was a problem, deletion aborted.');
-      console.error('API call error:', error);
-    }
-  };
 
   const handleCancel = () => {
     setInput({ rating: parseInt(prevRating, 10) });
@@ -77,9 +65,6 @@ function UpdateRating({ song, artist, ratingId, prevRating, onUpdate, onDataChan
       <ModalFooter>
         <Button color="primary" onClick={handleUpdate}>
           Update
-        </Button>{' '}
-        <Button color="danger" onClick={handleDelete}>
-          Delete
         </Button>{' '}
         <Button color="secondary" onClick={handleCancel}>
           Cancel
