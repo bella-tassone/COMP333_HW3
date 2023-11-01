@@ -1,19 +1,40 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function AddRating() {
   const [inputs, setInputs] = useState({});
+  const [error, setError] = useState('');
+  const username = sessionStorage.getItem('username');
 
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    setInputs(values => ({...values, [name]: value}))
-  }
+    setInputs((values) => ({ ...values, [name]: value }));
+  };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    alert(inputs);
-  }
+    inputs.username = username;
+    inputs.rating = parseInt(inputs.rating);
 
+    try {
+      const response = await axios.post('http://localhost/index.php/rating/create', inputs);
+
+      if (response.status === 200) {
+        alert('Rating added successfully');
+      } else {
+        alert('Failed to add rating. Please try again.');
+      }
+    } catch (error) {
+      console.error('API call error:', error);
+
+      if (error.response && error.response.data && error.response.data.error) {
+        alert(error.response.data.error);
+      } else {
+        alert('An error occurred');
+      }
+    }
+  };
   return (
     <div style={{float:'right'}}>
         <h1>Add Rating</h1>
@@ -21,8 +42,8 @@ function AddRating() {
         <label>Song:
         <input 
             type="text" 
-            name="username" 
-            value={inputs.username || ""} 
+            name="song" 
+            value={inputs.song || ""} 
             onChange={handleChange}
         />
         </label>
