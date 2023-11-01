@@ -72,12 +72,12 @@ function Ratings(props) {
             <h1>Ratings</h1>
             {ratings && (<div className={"titleContainer"}>
             <form onSubmit={() => localStorage.setItem('limit', parseInt(limit))}>
-                <label>Show
+                <label>Show first 
                 <input 
                     type="number" 
                     name="limit" 
                     onChange={handleChange}
-                    style={{marginBottom:'10px', marginTop:'10px'}}
+                    style={{marginBottom:'10px', marginTop:'10px', marginRight:'2px', marginLeft:'2px', width:'40px'}}
                 />songs.
                 </label>
                 <input id='limit-submit' type="submit" style={{marginTop:"10px", marginLeft:'10px'}}/>
