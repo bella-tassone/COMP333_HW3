@@ -7,7 +7,7 @@ function DeleteRating({ ratingId, onDelete, onDataChange }) {
   const [ratingData, setRatingData] = useState(null);
   const username = localStorage.getItem('username');
 
-
+  //what should happen every re-render
   useEffect(() => {
     // Fetch rating data based on ratingId
     axios.get(`http://localhost/index.php/rating/get?id=${ratingId}`)
@@ -15,6 +15,7 @@ function DeleteRating({ ratingId, onDelete, onDataChange }) {
       .catch(error => console.error("Error fetching rating data:", error));
   }, [ratingId]);
 
+  // when delete is clicked
   const handleDelete = async () => {
     try {
       const response = await axios.delete(`http://localhost/index.php/rating/delete?id=${ratingId}`, {
@@ -22,6 +23,7 @@ function DeleteRating({ ratingId, onDelete, onDataChange }) {
           username: username,
         },
       });
+      //mark data as changed (so ratings will rerender)
       onDataChange();
 
       setModal(false);
@@ -40,6 +42,7 @@ function DeleteRating({ ratingId, onDelete, onDataChange }) {
     onDelete();
   };
 
+  // on cancel
   const handleCancel = () => {
     setModal(false);
     onDelete();

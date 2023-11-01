@@ -11,15 +11,18 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // user shouldn't get to login if already logged in
   if(localStorage.getItem('username')) {
     navigate("/");
   }
 
+  // when users enter values
   const handleChange = (event) => {
     const { name, value } = event.target;
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
+  // when submit button is clicked
   const handleSubmit = async (event) => {
     event.preventDefault();
 

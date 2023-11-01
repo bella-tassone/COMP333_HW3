@@ -17,11 +17,13 @@ function Ratings(dataChanges) {
     const user = localStorage.getItem('username');
     const defaultLimit = 15;
 
+    //user enters limit value
     const handleChange = (event) => {
         const value = event.target.value;
         setLimit(value);
       };
     
+    // what should happen on re-render
     useEffect(() => {
         axios.get(`http://localhost/index.php/rating/get?limit=${(localStorage.getItem('limit')) ?localStorage.getItem('limit') : defaultLimit}`)
         .then((response) => {
@@ -34,20 +36,23 @@ function Ratings(dataChanges) {
         return null;
     }
 
-      const clickUpdate = (rating) => {
-        setUpdateRating((updateRating) =>
-        updateRating === rating ? null : rating
+    //controls open/closing of update modal
+    const clickUpdate = (rating) => {
+    setUpdateRating((updateRating) =>
+    updateRating === rating ? null : rating
+    );
+    setDeleteRating(null);
+    };
+
+    //controls open/closing of delete modal
+    const clickDelete = (rating) => {
+        setDeleteRating((deleteRating) =>
+            deleteRating === rating ? null : rating
         );
-        setDeleteRating(null);
-      };
+        setUpdateRating(null);
+    };
 
-      const clickDelete = (rating) => {
-            setDeleteRating((deleteRating) =>
-                deleteRating === rating ? null : rating
-            );
-            setUpdateRating(null);
-      };
-
+    //turns numerical rating into stars
     const stars = (rating) => {
         const max = 5;
         const stars = [];
@@ -63,6 +68,7 @@ function Ratings(dataChanges) {
         return <div>{stars}</div>;
     };
 
+    //show all entries (no limit)
     const showAll = async () => {
         const value = 100000;
         setLimit(value);

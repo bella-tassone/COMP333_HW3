@@ -7,12 +7,14 @@ function UpdateRating({ song, artist, ratingId, prevRating, onUpdate, onDataChan
   const [input, setInput] = useState({ rating: parseInt(prevRating, 10) });
   const username = localStorage.getItem('username');
 
+  // when user enters values
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setInput({ ...input, rating: parseInt(value, 10) });
   };
 
+  //when user clicks update button (change info in database)
   const handleUpdate = async () => {
     const payload = {
       rating: input.rating,
@@ -35,7 +37,7 @@ function UpdateRating({ song, artist, ratingId, prevRating, onUpdate, onDataChan
     }
   };
 
-
+  //when user clicks cancel button
   const handleCancel = () => {
     setInput({ rating: parseInt(prevRating, 10) });
     setModal(false);

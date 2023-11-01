@@ -10,16 +10,19 @@ function Registration() {
   const [inputs, setInputs] = useState({ username: '', password1: '', password2: ''});
   const navigate = useNavigate();
 
+  // user shouldn't get to registration if already logged in
   if(localStorage.getItem('username')) {
     navigate("/");
   }
-
+   
+  // when users enter values
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   }
 
+  // when submit button is clicked
   const handleSubmit = async (event) => {
     event.preventDefault();
 

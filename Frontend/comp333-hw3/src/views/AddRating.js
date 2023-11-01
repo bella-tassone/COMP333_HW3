@@ -8,19 +8,21 @@ function AddRating({onChanges}) {
   const username = localStorage.getItem('username');
   const [count, setCount] = useState(0);
 
-
+// user puts in values
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
+  // on submit click
   const handleSubmit = async (event) => {
     event.preventDefault();
     onChanges();
     inputs.username = username;
     inputs.rating = parseInt(inputs.rating);
 
+    // fetch info from database
     try {
       const response = await axios.post('http://localhost/index.php/rating/create', inputs);
 
