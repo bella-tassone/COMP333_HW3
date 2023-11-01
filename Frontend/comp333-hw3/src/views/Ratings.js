@@ -9,13 +9,12 @@ import './Ratings.css';
 
 function Ratings() {
     const [ratings, setRatings] = useState("");
-    const username = sessionStorage.getItem('username');
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
 
 
 
-    const user = localStorage.getItem("user");
+    const user = localStorage.getItem('username');
 
     
     useEffect(() => {
@@ -110,7 +109,7 @@ function Ratings() {
                 </Table>
             </div>
             <div>
-            <h1>Hello, {username}</h1>
+            <h1>Hello, {user}</h1>
              </div>
         </div>
     );
