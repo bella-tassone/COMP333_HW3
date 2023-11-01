@@ -5,7 +5,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 function DeleteRating({ ratingId, onDelete, onDataChange }) {
   const [modal, setModal] = useState(true);
   const [ratingData, setRatingData] = useState(null);
-  const username = sessionStorage.getItem('username');
+  const username = localStorage.getItem('username');
 
 
   useEffect(() => {
