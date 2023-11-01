@@ -20,11 +20,6 @@ function Ratings(dataChanges) {
         const value = event.target.value;
         setLimit(value);
       };
-
-    const handleDataChange = () => {
-        setDataChange(!dataChange); 
-        setUpdateRating(null);
-      };
     
     useEffect(() => {
         axios.get(`http://localhost/index.php/rating/get?limit=${(localStorage.getItem('limit')) ?localStorage.getItem('limit') : defaultLimit}`)
@@ -123,10 +118,10 @@ function Ratings(dataChanges) {
                             </tbody>
                             <div>
                                 {(user) && (deleteRating===rating.id) && (
-                                    <DeleteRating ratingId={deleteRating} onDelete={() =>clickDelete(rating)} onDataChange={handleDataChange}/>
+                                    <DeleteRating ratingId={deleteRating} onDelete={() =>clickDelete(rating)} onDataChange={() =>setDataChange(!dataChange)}/>
                                 )}
                                 {(user) && (updateRating===rating.id) && (
-                                    <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating} onUpdate={() => clickUpdate(rating)} onDataChange={handleDataChange}/>
+                                    <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating} onUpdate={() => clickUpdate(rating)} onDataChange={() =>setDataChange(!dataChange)}/>
                                 )}
                             </div>
                         </div>
