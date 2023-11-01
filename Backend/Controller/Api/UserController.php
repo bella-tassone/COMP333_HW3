@@ -126,8 +126,6 @@ class UserController extends BaseController
 
                         if($password_match) {
                             // success! user should be logged in
-                            $_SESSION["loggedin"] = true;
-                            $_SESSION["username"] = $user;
                             $arrUser['message'] = 'login successful!';
                             $responseData = json_encode($arrUser);
                         }

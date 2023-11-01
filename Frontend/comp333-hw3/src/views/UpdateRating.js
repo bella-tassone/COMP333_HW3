@@ -5,7 +5,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 function UpdateRating({ song, artist, ratingId, prevRating, onUpdate, onDataChange }) {
   const [modal, setModal] = useState(true);
   const [input, setInput] = useState({ rating: parseInt(prevRating, 10) });
-  const username = sessionStorage.getItem('username');
+  const username = localStorage.getItem('username');
 
   const handleChange = (event) => {
     const name = event.target.name;
