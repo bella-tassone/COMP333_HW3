@@ -16,6 +16,7 @@ import './App.css';
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
+  const [dataChange, setDataChange] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,16 +35,20 @@ function App() {
     setLoggedIn(false);
   }
 
+  const refreshRatingsData = () => {
+    setDataChange(!dataChange);
+  };
+
   return (
       <div style={{display:'inline-flex',marginLeft:"20px"}}>
         <Routes>
-            <Route path="/" element={<Ratings />} />
+            <Route path="/" element={<Ratings DataChanged={dataChange} />} />
             <Route path="login" element={<Login />} />
             <Route path="registration" element={<Registration />} />
         </Routes>
         {loggedIn && (
           <div style={{marginLeft:"100px"}} >
-          <AddRating />
+          <AddRating onRatingAdded={refreshRatingsData} />
           </div>
         )}
           <div style={{position:'relative'}}>

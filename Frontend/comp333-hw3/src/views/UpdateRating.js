@@ -16,6 +16,10 @@ function UpdateRating({song, artist, ratingId, prevRating}) {
     setModal(false);
   }
 
+  const handleCancel = () => {
+    setInput('');
+  }
+
   return (
     <Modal isOpen={modal}>
     <ModalHeader>Update Rating</ModalHeader>

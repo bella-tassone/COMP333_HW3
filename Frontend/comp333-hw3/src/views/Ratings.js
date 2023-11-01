@@ -7,12 +7,17 @@ import { UncontrolledTooltip, Table } from 'reactstrap';
 import './Ratings.css';
 
 
-function Ratings() {
+function Ratings(props) {
     const [ratings, setRatings] = useState("");
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
+    const [dataChange, setDataChange] = useState(false);
     const user = localStorage.getItem('username');
 
+    const handleDataChange = (props) => {
+        setDataChange(!dataChange); 
+        setUpdateRating(null);
+      };
     
     useEffect(() => {
         axios.get("http://localhost/index.php/rating/get")
@@ -20,7 +25,7 @@ function Ratings() {
             setRatings(response.data);
         })
         .catch(err => console.log(err));
-    }, []);
+    }, [dataChange, props.DataChange]);
 
     if (!ratings) return null;
 
@@ -29,13 +34,17 @@ function Ratings() {
       };
 
       const clickUpdate = (rating) => {
-        setUpdateRating(rating);
+        setUpdateRating((updateRating) =>
+        updateRating === rating ? null : rating
+        );
         setDeleteRating(null);
       };
 
       const clickDelete = (rating) => {
-        setUpdateRating(null);
-        setDeleteRating(rating);
+            setDeleteRating((deleteRating) =>
+                deleteRating === rating ? null : rating
+            );
+            setUpdateRating(null);
       };
 
     const stars = (rating) => {
@@ -95,10 +104,10 @@ function Ratings() {
                             </tbody>
                             <div>
                                 {(user) && (deleteRating===rating.id) && (
-                                    <DeleteRating ratingId={deleteRating} onDelete={() => setDeleteRating(null)}/>
+                                    <DeleteRating ratingId={deleteRating} onDelete={() => setDeleteRating(null)} onDataChange={handleDataChange}/>
                                 )}
                                 {(user) && (updateRating===rating.id) && (
-                                    <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating}/>
+                                    <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating} onDelete={() => clickDelete(rating)} onDataChange={handleDataChange}/>
                                 )}
                             </div>
                         </div>
