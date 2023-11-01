@@ -82,6 +82,7 @@ function Ratings(props) {
                 </label>
                 <input id='limit-submit' type="submit" style={{marginTop:"10px", marginLeft:'10px'}}/>
             </form>
+            <p style={{color:'blue'}}> You are currently showing the first {localStorage.getItem('limit')} ratings in the system.</p>
                 <Table>
                     {ratings.map((rating) => (
                         <div key={rating.id}>
