@@ -38,7 +38,6 @@ function App() {
         </Routes>
         {loggedIn && (
           <div style={{marginLeft:"100px"}} >
-            {console.log("Hello")}
           <AddRating onChanges={() => setDataChanges(!dataChanges)} />
           </div>
         )}

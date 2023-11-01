@@ -12,7 +12,7 @@ function Ratings(dataChanges) {
     const [ratings, setRatings] = useState(null);
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
-    const [dataChange, setDataChange] = useState(dataChanges);
+    const [dataChange, setDataChange] = useState(false);
     const [showAllClicked, setShowAllClicked] = useState(false);
     const user = localStorage.getItem('username');
     const defaultLimit = 15;
