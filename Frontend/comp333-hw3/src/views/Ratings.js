@@ -7,12 +7,12 @@ import { UncontrolledTooltip, Table } from 'reactstrap';
 import './Ratings.css';
 
 
-function Ratings(props) {
+function Ratings(dataChanges) {
     const [limit, setLimit] = useState(10);
     const [ratings, setRatings] = useState(null);
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
-    const [dataChange, setDataChange] = useState(false);
+    const [dataChange, setDataChange] = useState(dataChanges);
     const user = localStorage.getItem('username');
     const defaultLimit = 15;
 
@@ -21,7 +21,7 @@ function Ratings(props) {
         setLimit(value);
       };
 
-    const handleDataChange = (props) => {
+    const handleDataChange = () => {
         setDataChange(!dataChange); 
         setUpdateRating(null);
       };
@@ -32,7 +32,7 @@ function Ratings(props) {
             setRatings(response.data);
         })
         .catch(err => console.log(err));
-    }, [dataChange, props.dataChange]);
+    }, [dataChange, dataChanges]);
 
     if (!ratings) {
         return null;
@@ -75,6 +75,7 @@ function Ratings(props) {
                 <label>Show first 
                 <input 
                     type="number" 
+                    min="1"
                     name="limit" 
                     onChange={handleChange}
                     style={{marginBottom:'10px', marginTop:'10px', marginRight:'2px', marginLeft:'2px', width:'40px'}}
@@ -108,11 +109,11 @@ function Ratings(props) {
                                         {(user === rating.username) && (
                                             <div style={{display:'inline-flex'}} >
                                                 <div id='update-icon' style={{marginRight:'20px'}}>
-                                                    <BsPencilSquare id={`update-icon${rating.id}`} ratingId={rating.id} onClick={() => clickUpdate(rating.id)}/>
+                                                    <BsPencilSquare id={`update-icon${rating.id}`} onClick={() => clickUpdate(rating.id)}/>
                                                     <UncontrolledTooltip target={`update-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Edit<br/>rating<br/>{rating.id}!</UncontrolledTooltip>
                                                 </div>
                                                 <div style={{marginRight:'5px'}}>
-                                                    <BsFillTrashFill id={`delete-icon${rating.id}`} ratingId={rating.id} onClick={() => clickDelete(rating.id)}/>
+                                                    <BsFillTrashFill id={`delete-icon${rating.id}`} onClick={() => clickDelete(rating.id)}/>
                                                     <UncontrolledTooltip target={`delete-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Delete<br/>rating<br/>{rating.id}!</UncontrolledTooltip>
                                                 </div>
                                             </div>

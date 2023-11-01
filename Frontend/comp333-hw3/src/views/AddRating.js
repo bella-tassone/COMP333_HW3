@@ -3,7 +3,7 @@ import axios from 'axios';
 import { UncontrolledTooltip } from 'reactstrap';
 
 
-function AddRating(onRatingAdded) {
+function AddRating({onChanges}) {
   const [inputs, setInputs] = useState({});
   const username = localStorage.getItem('username');
   const [count, setCount] = useState(0);
@@ -17,6 +17,7 @@ function AddRating(onRatingAdded) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    onChanges();
     inputs.username = username;
     inputs.rating = parseInt(inputs.rating);
 
