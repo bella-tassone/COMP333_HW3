@@ -70,7 +70,7 @@ class RatingController extends BaseController
                     //check to make sure rating is an int between 1 and 5
                     elseif ((!is_int($rating)) || ($rating > 5 || $rating < 1)) {
 
-                        $strErrorDesc = "Rating must be an integer between 0 and 5";
+                        $strErrorDesc = "Rating must be an integer between 1 and 5";
                         $strErrorHeader = 'HTTP/1.1 400 Bad Request';
 
                     //check to make sure that song hasn't already been rated
@@ -118,6 +118,8 @@ class RatingController extends BaseController
         if (strtoupper($requestMethod) == 'DELETE') {
             try {
                 $ratingModel = new RatingModel();
+                $postData = json_decode(file_get_contents('php://input'), true);
+
 
                 $id = null;
                 if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
@@ -127,7 +129,7 @@ class RatingController extends BaseController
                     //should only be one row since ids are unique
                     $row = $rows[0];
                     $username = $row['username'];
-                    $user = $_SESSION["username"]; //session variable
+                    $user = $postData['username'];
                     $arrRating = [];
     
                     //make sure rating in question belongs to the logged-in user
@@ -179,6 +181,8 @@ class RatingController extends BaseController
         if (strtoupper($requestMethod) == 'PUT') {
             try {
                 $ratingModel = new RatingModel();
+                $postData = json_decode(file_get_contents('php://input'), true);
+
 
                 $id = null;
                 if (isset($arrQueryStringParams['id']) && $arrQueryStringParams['id']) {
@@ -191,7 +195,7 @@ class RatingController extends BaseController
                     $song = $row['song'];
                     $artist = $row['artist'];
                     $rating = $row['rating'];
-                    $user = $_SESSION["username"]; //session variable
+                    $user = $postData['username'];
                     $arrRating = [];
     
                     $postData = json_decode(file_get_contents('php://input'), true);
@@ -199,7 +203,7 @@ class RatingController extends BaseController
     
                     //make sure rating in question belongs to the logged-in user
                     //conditional currently always returns true, to be compared against session info eventually
-                    if ($username == $username) {
+                    if ($username == $user) {
                         if ($rating == "") {
                             $strErrorDesc = "Not all fields filled out";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
@@ -209,6 +213,10 @@ class RatingController extends BaseController
                             $strErrorDesc = "Rating has not been changed";
                             $strErrorHeader = 'HTTP/1.1 400 Bad Request';
                         }
+                        elseif (!is_numeric($updatedRating) || $updatedRating < 1 || $updatedRating > 5) {
+                            $strErrorDesc = "Rating must be an integer between 1 and 5";
+                            $strErrorHeader = 'HTTP/1.1 400 Bad Request';
+                            }
                         else {
                             $arrRating['code'] = $ratingModel->updateRating([$song, $artist, $updatedRating, $id]);
                             $arrRating['message'] = 'Rating updated successfully';

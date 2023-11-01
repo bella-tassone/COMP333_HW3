@@ -5,6 +5,8 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 function DeleteRating({ ratingId, onDelete, onDataChange }) {
   const [modal, setModal] = useState(true);
   const [ratingData, setRatingData] = useState(null);
+  const username = sessionStorage.getItem('username');
+
 
   useEffect(() => {
     // Fetch rating data based on ratingId
@@ -15,12 +17,20 @@ function DeleteRating({ ratingId, onDelete, onDataChange }) {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost/index.php/rating/delete?id=${ratingId}`);
+      const response = await axios.delete(`http://localhost/index.php/rating/delete?id=${ratingId}`, {
+        data: {
+          username: username,
+        },
+      });
       onDataChange();
+
       setModal(false);
+      if (response.status === 200) {
+        alert('Deleted rating!');
+      }
     } catch (error) {
       console.error('API call error:', error);
-
+  
       if (error.response && error.response.data && error.response.data.error) {
         alert(error.response.data.error);
       } else {

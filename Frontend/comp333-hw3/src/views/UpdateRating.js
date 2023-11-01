@@ -1,11 +1,39 @@
-import { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 
 function UpdateRating({song, artist, ratingId, prevRating, onUpdate, onDataChange}) {
   const [modal, setModal] = useState(true);
-  const [input, setInput] = useState({rating:prevRating});
+  const [input, setInput] = useState({ rating: parseInt(prevRating, 10) });
+  const username = sessionStorage.getItem('username');
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInput({ ...input, rating: parseInt(value, 10) });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const payload = {
+      rating: input.rating,
+      username: username,
+    };
+
+    try {
+      const response = await axios.put(`http://localhost/index.php/rating/update?id=${ratingId}`, payload);
+
+      if (response.status === 200) {
+        alert('Rating updated successfully');
+        setModal(false);
+      } else {
+        alert('Failed to update rating. Please try again.');
+      }
+    } catch (error) {
+      console.error('API call error:', error);
+
 
   const handleSubmit = async () => {
     let res = await axios.delete(`${"http://localhost/index.php/rating/update"}?${ratingId}`, {
