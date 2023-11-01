@@ -9,11 +9,9 @@ import './App.css';
 import { UncontrolledTooltip } from 'reactstrap';
 
 
-
-
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [dataChange, setDataChange] = useState(false);
+  const [dataChanges, setDataChanges] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,20 +28,18 @@ function App() {
     setLoggedIn(false);
   }
 
-  const refreshRatingsData = () => {
-    setDataChange(!dataChange);
-  };
-
   return (
       <div style={{display:'inline-flex',marginLeft:"20px"}}>
         <Routes>
-            <Route path="/" element={<Ratings dataChange={dataChange} />} />
+            <Route path="/" element={<Ratings dataChanges={dataChanges} />} />
             <Route path="login" element={<Login />} />
             <Route path="registration" element={<Registration />} />
+            <Route path="addrating" element={<AddRating onChanges={() => setDataChanges(!dataChanges)} />} />
         </Routes>
         {loggedIn && (
           <div style={{marginLeft:"100px"}} >
-          <AddRating onRatingAdded={refreshRatingsData} />
+            {console.log("Hello")}
+          <AddRating onChanges={() => setDataChanges(!dataChanges)} />
           </div>
         )}
           <div>

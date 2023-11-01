@@ -3,7 +3,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import axios from 'axios';
 
 
-function UpdateRating({song, artist, ratingId, prevRating}) {
+function UpdateRating({song, artist, ratingId, prevRating, onUpdate}) {
   const [modal, setModal] = useState(true);
   const [input, setInput] = useState({rating:prevRating});
 
@@ -14,11 +14,13 @@ function UpdateRating({song, artist, ratingId, prevRating}) {
     .then(() => alert("Rating successfully deleted!"))
     .catch(() => alert("There was a problem, deletion aborted."));
     setModal(false);
+    onUpdate();
   }
 
   const handleCancel = () => {
     setInput('');
     setModal(false);
+    onUpdate();
   }
 
   return (

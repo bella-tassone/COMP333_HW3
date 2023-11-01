@@ -2,13 +2,13 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-function DeleteRating({ ratingId, onRatingDeleted }) {
+function DeleteRating({ ratingId, onDelete, onDataChange }) {
   const [modal, setModal] = useState(true);
   const [ratingData, setRatingData] = useState(null);
 
   useEffect(() => {
     // Fetch rating data based on ratingId
-    axios.get(`http://localhost/index.php/rating/${ratingId}`)
+    axios.get(`http://localhost/index.php/rating/get?id=${ratingId}`)
       .then(response => setRatingData(response.data))
       .catch(error => console.error("Error fetching rating data:", error));
   }, [ratingId]);
@@ -16,6 +16,7 @@ function DeleteRating({ ratingId, onRatingDeleted }) {
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost/index.php/rating/delete?id=${ratingId}`);
+      onDataChange();
       setModal(false);
     } catch (error) {
       console.error('API call error:', error);
@@ -26,7 +27,13 @@ function DeleteRating({ ratingId, onRatingDeleted }) {
         alert('An error occurred');
       }
     }
+    onDelete();
   };
+
+  const handleCancel = () => {
+    setModal(false);
+    onDelete();
+  }
 
   return (
     <Modal style={{marginLeft:'50px'}} isOpen={modal}>
@@ -38,7 +45,7 @@ function DeleteRating({ ratingId, onRatingDeleted }) {
         <Button color="primary" onClick={handleDelete}>
           Delete
         </Button>{' '}
-        <Button color="secondary" onClick={() => setModal(false)}>
+        <Button color="secondary" onClick={handleCancel}>
           Cancel
         </Button>
       </ModalFooter>
