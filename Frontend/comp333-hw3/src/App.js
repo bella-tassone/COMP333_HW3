@@ -23,7 +23,7 @@ function App() {
     if (loggedInUser) {
       setLoggedIn(true);
     }
-  }, []);
+  });
 
   const logout = () => {
     localStorage.removeItem("username");
