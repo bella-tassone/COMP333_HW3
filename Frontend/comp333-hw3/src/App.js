@@ -1,32 +1,66 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Ratings from "./views/Ratings";
-import DeleteRating from "./views/DeleteRating";
-import UpdateRating from "./views/UpdateRating";
 import Login from "./views/Login";
 import Registration from "./views/Registration";
-import NoPage from "./views/NoPage";
 import AddRating from "./views/AddRating";
-import ViewRating from "./views/ViewRating";
 import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
+import './App.css';
+import { UncontrolledTooltip } from 'reactstrap';
 
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
+  const [dataChanges, setDataChanges] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("username");
+    if (loggedInUser) {
+      setLoggedIn(true);
+    }
+  });
+
+  const logout = () => {
+    localStorage.removeItem("username");
+    setLoggedIn(false);
+  }
 
   return (
-    <BrowserRouter>
-        <div style={{display:'flex', marginLeft:"20px"}}>
-          <Routes>
-              <Route path="/" element={<Ratings />} />
-              <Route path="login" element={<Login setLoggedIn={setLoggedIn} setUsername={setUsername} />} />
-              <Route path="registration" element={<Registration />} />
-          </Routes>
+      <div style={{display:'inline-flex',marginLeft:"20px"}}>
+        <Routes>
+            <Route path="/" element={<Ratings dataChanges={dataChanges} />} />
+            <Route path="login" element={<Login />} />
+            <Route path="registration" element={<Registration />} />
+            <Route path="addrating" element={<AddRating onChanges={() => setDataChanges(!dataChanges)} />} />
+        </Routes>
+        {loggedIn && (
           <div style={{marginLeft:"100px"}} >
-            <AddRating />
+            {console.log("Hello")}
+          <AddRating onChanges={() => setDataChanges(!dataChanges)} />
           </div>
-        </div>
-    </BrowserRouter>
+        )}
+          <div>
+            {(!loggedIn && location.pathname === '/') && (
+              <div>
+                <button className="login-button" id='login' onClick={() => navigate("login")}>
+                  Login
+                </button>
+                <UncontrolledTooltip target='login' placement='left' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginRight:'5px', marginTop:'5px'}}>Login to your<br/>account here!</UncontrolledTooltip>
+              </div>
+            )}
+            {loggedIn && (
+              <div>
+                <button className="logout-button" id='logout' onClick={() => logout()}>
+                  Log Out
+                </button>
+                <UncontrolledTooltip target='logout' placement='left' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginRight:'5px', marginTop:'5px'}}>Log out of your<br/>account here!</UncontrolledTooltip>
+              </div>
+            )}
+          </div>
+      </div>
   );
 }
 

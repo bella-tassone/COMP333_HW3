@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-function UpdateRating({ song, artist, ratingId, prevRating }) {
+
+function UpdateRating({song, artist, ratingId, prevRating, onUpdate, onDataChange}) {
   const [modal, setModal] = useState(true);
   const [input, setInput] = useState({ rating: parseInt(prevRating, 10) });
   const username = sessionStorage.getItem('username');
@@ -33,44 +34,53 @@ function UpdateRating({ song, artist, ratingId, prevRating }) {
     } catch (error) {
       console.error('API call error:', error);
 
-      if (error.response && error.response.data && error.response.data.error) {
-        alert(error.response.data.error);
-      } else {
-        alert('An error occurred');
-      }
-    }
-  };
+
+  const handleSubmit = async () => {
+    let res = await axios.delete(`${"http://localhost/index.php/rating/update"}?${ratingId}`, {
+      params: input
+    })
+    .then(() => alert("Rating successfully deleted!"))
+    .catch(() => alert("There was a problem, deletion aborted."));
+    setModal(false);
+    onUpdate();
+    onDataChange();
+  }
+
+  const handleCancel = () => {
+    setInput('');
+    setModal(false);
+    onUpdate();
+  }
 
   return (
-    <Modal isOpen={modal}>
-      <ModalHeader>Update Rating</ModalHeader>
-      <ModalBody>
-        <label>Song:</label>
-        <span>{song}</span>
-        <br />
-        <label>Artist:</label>
-        <span>{artist}</span>
-        <br />
-        <label>
-          Rating:
-          <input
-            type="number"
-            name="rating"
-            value={input.rating}
-            onChange={handleChange}
-          />
-        </label>
-      </ModalBody>
-      <ModalFooter>
-        <Button color="primary" onClick={handleSubmit}>
-          Update
-        </Button>{' '}
-        <Button color="secondary" onClick={() => setModal(false)}>
-          Cancel
-        </Button>
-      </ModalFooter>
-    </Modal>
-  );
+    <Modal style={{marginLeft:'50px'}} isOpen={modal}>
+    <ModalHeader>Update Rating</ModalHeader>
+    <ModalBody>
+      <label>Song:</label>
+      <span>{song}</span>
+      <br/>
+      <label>Artist:</label>
+      <span>{artist}</span>
+      <br/>
+      <label>Rating:
+        <input 
+          type="number" 
+          name="rating" 
+          value={input.rating}
+          onChange={(e) => setInput(e.target.value)}
+        />
+      </label>
+    </ModalBody>
+    <ModalFooter>
+      <Button color="primary" onClick={handleSubmit}>
+        Update
+      </Button>{' '}
+      <Button color="secondary" onClick={() => handleCancel()}>
+        Cancel
+      </Button>
+    </ModalFooter>
+  </Modal>
+  )
 }
 
 export default UpdateRating;

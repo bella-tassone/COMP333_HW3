@@ -7,39 +7,44 @@ import { UncontrolledTooltip, Table } from 'reactstrap';
 import './Ratings.css';
 
 
-function Ratings() {
-    const [ratings, setRatings] = useState("");
-    const username = sessionStorage.getItem('username');
+function Ratings(dataChanges) {
+    const [limit, setLimit] = useState(10);
+    const [ratings, setRatings] = useState(null);
     const [updateRating, setUpdateRating] = useState(null);
     const [deleteRating, setDeleteRating] = useState(null);
+    const [dataChange, setDataChange] = useState(dataChanges);
+    const user = localStorage.getItem('username');
+    const defaultLimit = 15;
 
-
-
-    const user = localStorage.getItem("user");
-
+    const handleChange = (event) => {
+        const value = event.target.value;
+        setLimit(value);
+      };
     
     useEffect(() => {
-        axios.get("http://localhost/index.php/rating/get")
+        axios.get(`http://localhost/index.php/rating/get?limit=${(localStorage.getItem('limit')) ?localStorage.getItem('limit') : defaultLimit}`)
         .then((response) => {
             setRatings(response.data);
         })
         .catch(err => console.log(err));
-    }, []);
+    }, [dataChange, dataChanges]);
 
-    if (!ratings) return null;
-
-    const isUserRating = (rating) => {
-        return user === rating.username;
-      };
+    if (!ratings) {
+        return null;
+    }
 
       const clickUpdate = (rating) => {
-        setUpdateRating(rating);
+        setUpdateRating((updateRating) =>
+        updateRating === rating ? null : rating
+        );
         setDeleteRating(null);
       };
 
       const clickDelete = (rating) => {
-        setUpdateRating(null);
-        setDeleteRating(rating);
+            setDeleteRating((deleteRating) =>
+                deleteRating === rating ? null : rating
+            );
+            setUpdateRating(null);
       };
 
     const stars = (rating) => {
@@ -60,7 +65,21 @@ function Ratings() {
     return(
         <div className="mainContainer">
             <h1>Ratings</h1>
-            <div className={"titleContainer"}>
+            {ratings && (<div className={"titleContainer"}>
+            <form onSubmit={() => localStorage.setItem('limit', parseInt(limit))}>
+                <label>Show first 
+                <input 
+                    type="number" 
+                    min="1"
+                    name="limit" 
+                    onChange={handleChange}
+                    style={{marginBottom:'10px', marginTop:'10px', marginRight:'2px', marginLeft:'2px', width:'40px'}}
+                />songs.
+                </label>
+                <input id='limit-submit' type="submit" style={{marginTop:"10px", marginLeft:'10px'}}/>
+            </form>
+            <p style={{color:'blue'}}> You are currently showing the first {localStorage.getItem('limit')} ratings in the system.</p>
+            <UncontrolledTooltip target='limit-submit' placement='right' style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginLeft:'5px'}}>Control how many<br/>entries you see!</UncontrolledTooltip>
                 <Table>
                     {ratings.map((rating) => (
                         <div key={rating.id}>
@@ -82,15 +101,15 @@ function Ratings() {
                                         {stars(rating.rating)}
                                     </td>
                                     <td>
-                                        {true && (
+                                        {(user === rating.username) && (
                                             <div style={{display:'inline-flex'}} >
-                                                <div style={{marginRight:'20px'}}>
-                                                    <BsPencilSquare id={`update-icon${rating.id}`} ratingId={rating.id} onClick={() => clickUpdate(rating.id)}/>
-                                                    <UncontrolledTooltip target={`update-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Edit<br/>your<br/>rating!</UncontrolledTooltip>
+                                                <div id='update-icon' style={{marginRight:'20px'}}>
+                                                    <BsPencilSquare id={`update-icon${rating.id}`} onClick={() => clickUpdate(rating.id)}/>
+                                                    <UncontrolledTooltip target={`update-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Edit<br/>rating<br/>#{rating.id}!</UncontrolledTooltip>
                                                 </div>
                                                 <div style={{marginRight:'5px'}}>
-                                                    <BsFillTrashFill id={`delete-icon${rating.id}`} ratingId={rating.id} onClick={() => clickDelete(rating.id)}/>
-                                                    <UncontrolledTooltip target={`delete-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Delete<br/>your<br/>rating!</UncontrolledTooltip>
+                                                    <BsFillTrashFill id={`delete-icon${rating.id}`} onClick={() => clickDelete(rating.id)}/>
+                                                    <UncontrolledTooltip target={`delete-icon${rating.id}`} style={{backgroundColor:'lightblue', borderRadius:'5px', padding:'3px', fontSize:'10px', marginBottom:'5px'}}>Delete<br/>rating<br/>#{rating.id}!</UncontrolledTooltip>
                                                 </div>
                                             </div>
                                         )}
@@ -98,20 +117,18 @@ function Ratings() {
                                 </tr>
                             </tbody>
                             <div>
-                                {(deleteRating===rating.id) && (
-                                    <DeleteRating ratingId={deleteRating} onDelete={() => setDeleteRating(null)}/>
+                                {(user) && (deleteRating===rating.id) && (
+                                    <DeleteRating ratingId={deleteRating} onDelete={() =>clickDelete(rating)} onDataChange={() =>setDataChange(!dataChange)}/>
                                 )}
-                                {(updateRating===rating.id) && (
-                                    <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating}/>
+                                {(user) && (updateRating===rating.id) && (
+                                    <UpdateRating ratingId={updateRating} song={rating.song} artist={rating.artist} prevRating={rating.rating} onUpdate={() => clickUpdate(rating)} onDataChange={() =>setDataChange(!dataChange)}/>
                                 )}
                             </div>
                         </div>
                     ))}
                 </Table>
             </div>
-            <div>
-            <h1>Hello, {username}</h1>
-             </div>
+            )}
         </div>
     );
 }
